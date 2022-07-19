@@ -18,4 +18,8 @@ export class RecipeListComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
+  onRecipeAdded(recipe: Recipe) {
+    this.recipes.push(recipe);
+  }
 }
