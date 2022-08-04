@@ -1,9 +1,12 @@
-<app-header></app-header>
+<app-header (navItemSelected)="selectedNavItem = $event"></app-header>
 
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h1>cleaned</h1>
+      <app-recipes *ngIf="selectedNavItem === 'Recipes'"></app-recipes>
+      <app-shopping-list
+        *ngIf="selectedNavItem === 'ShoppingList'"
+      ></app-shopping-list>
     </div>
   </div>
 </div>

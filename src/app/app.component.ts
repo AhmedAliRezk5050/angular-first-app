@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,15 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  oddArray: number[] = [];
-
-  evenArray: number[] = [];
-
-  counterIncremented(value: number) {
-    if (value % 2 === 0) {
-      this.evenArray.push(value);
-    } else {
-      this.oddArray.push(value);
-    }
-  }
+  selectedNavItem: header.SelectedNavItem = 'Recipes';
 }
