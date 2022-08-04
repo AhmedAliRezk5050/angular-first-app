@@ -2,9 +2,14 @@
 
 <div class="container">
   <div class="row">
-    <div class="col">
-      <app-recipes></app-recipes>
-      <app-shopping-list></app-shopping-list>
+    <div class="col-12">
+      <!-- <app-recipes></app-recipes>
+      <app-shopping-list></app-shopping-list> -->
+      <app-game-control
+        (incremented)="counterIncremented($event)"
+      ></app-game-control>
+      <app-even *ngFor="let ve of oddArray" [val]="ve"></app-even>
+      <app-odd *ngFor="let ve of evenArray" [val]="ve"></app-odd>
     </div>
   </div>
 </div>
