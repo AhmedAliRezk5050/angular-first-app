@@ -18,6 +18,8 @@ export class RecipeItemComponent implements OnInit {
 
   @Output() recipeAdded = new EventEmitter<Recipe>();
 
+  @Output() recipeSelected = new EventEmitter<void>();
+
   constructor() {}
 
   ngOnInit(): void {}
@@ -28,5 +30,10 @@ export class RecipeItemComponent implements OnInit {
 
   addRecipe(recipe: Recipe) {
     this.recipeAdded.emit(recipe);
+  }
+
+  onRecipeSelected(e: Event) {
+    e.preventDefault();
+    this.recipeSelected.emit();
   }
 }
