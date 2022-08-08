@@ -1,3 +1,4 @@
+import { RecipeService } from './recipe.service';
 import { Recipe } from './recipe.model';
 import { Component, Input, OnInit } from '@angular/core';
 
@@ -5,6 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   selector: 'app-recipes',
   templateUrl: './recipes.component.html',
   styleUrls: ['./recipes.component.css'],
+  providers: [RecipeService],
 })
 export class RecipesComponent implements OnInit {
   @Input() selectedRecipe?: Recipe;
