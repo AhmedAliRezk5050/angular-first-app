@@ -28,11 +28,11 @@ export class DropdownDirective {
     }
   }
 
-  @HostListener('focusout')
-  onBlur() {
-    this.isVisible = !this.isVisible;
-    this.renderer.removeClass(this.hostElement, 'show');
-  }
+  // @HostListener('focusout')
+  // onBlur() {
+  //   this.isVisible = !this.isVisible;
+  //   this.renderer.removeClass(this.hostElement, 'show');
+  // }
 
   get hostElement() {
     const x = this.el.nativeElement;
