@@ -1,5 +1,22 @@
-<div class="" [ngSwitch]="message">
-  <p *ngSwitchCase="'ahmed'">ahmed</p>
-  <p *ngSwitchCase="'ali'">ali</p>
-  <p *ngSwitchDefault>default</p>
-</div>
+<h1 class="mb-3">Practise</h1>
+<nav>
+  <ul>
+    <li>
+      <a
+        routerLink="/first-component"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        >First Component</a
+      >
+    </li>
+    <li>
+      <a
+        routerLink="/second-component"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        >Second Component</a
+      >
+    </li>
+  </ul>
+</nav>
+<router-outlet></router-outlet>

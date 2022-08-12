@@ -14,6 +14,8 @@ import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-ed
 import { PractComponent } from './pract/pract.component';
 import { DropdownDirective } from './shared/directives/dropdown.directive';
 import { AppRoutingModule } from './app-routing.module';
+import { FirstComponent } from './pract/first/first.component';
+import { SecondComponent } from './pract/second/second.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { AppRoutingModule } from './app-routing.module';
     ShoppingEditComponent,
     PractComponent,
     DropdownDirective,
+    FirstComponent,
+    SecondComponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
   providers: [ShoppingListService],
