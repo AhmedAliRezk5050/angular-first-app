@@ -41,6 +41,7 @@ const routes: Routes = [
   {
     path: 'first-component/:name',
     component: FirstComponent,
+    canActivateChild: [AuthGuard],
     children: [
       {
         path: 'child-a',
