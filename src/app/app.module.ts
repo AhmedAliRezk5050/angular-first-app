@@ -16,6 +16,7 @@ import { DropdownDirective } from './shared/directives/dropdown.directive';
 import { AppRoutingModule } from './app-routing.module';
 import { FirstComponent } from './pract/first/first.component';
 import { SecondComponent } from './pract/second/second.component';
+import { NotFoundComponent } from './pract/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { SecondComponent } from './pract/second/second.component';
     DropdownDirective,
     FirstComponent,
     SecondComponent,
+    NotFoundComponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
   providers: [ShoppingListService],
