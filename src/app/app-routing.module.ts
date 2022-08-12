@@ -4,8 +4,8 @@ import { FirstComponent } from './pract/first/first.component';
 import { SecondComponent } from './pract/second/second.component';
 
 const routes: Routes = [
-  { path: 'first-component', component: FirstComponent },
-  { path: 'second-component', component: SecondComponent },
+  { path: 'first-component/:name', component: FirstComponent },
+  { path: 'second-component/:name', component: SecondComponent },
 ];
 
 @NgModule({
