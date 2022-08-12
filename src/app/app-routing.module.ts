@@ -6,7 +6,9 @@ import { SecondComponent } from './pract/second/second.component';
 
 const routes: Routes = [
   { path: 'first-component/:name', component: FirstComponent },
+  { path: 'first-component', component: FirstComponent },
   { path: 'second-component/:name', component: SecondComponent },
+  { path: '', redirectTo: 'first-component', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent },
 ];
 
