@@ -12,8 +12,9 @@ export class FirstComponent implements OnInit {
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(
-      (params) => (this.name = params['name'] ?? 'default name'),
-    );
+    this.route.params.subscribe((params) => {
+      const x = params['name'];
+      this.name = !!params['name'] ? params['name'] : 'default name';
+    });
   }
 }

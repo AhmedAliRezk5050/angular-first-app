@@ -17,6 +17,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { FirstComponent } from './pract/first/first.component';
 import { SecondComponent } from './pract/second/second.component';
 import { NotFoundComponent } from './pract/not-found/not-found.component';
+import { ChildAComponent } from './pract/first-component/child-a/child-a.component';
+import { ChildBComponent } from './pract/first-component/child-b/child-b.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import { NotFoundComponent } from './pract/not-found/not-found.component';
     FirstComponent,
     SecondComponent,
     NotFoundComponent,
+    ChildAComponent,
+    ChildBComponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
   providers: [ShoppingListService],
