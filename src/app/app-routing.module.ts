@@ -12,6 +12,7 @@ import {
 import { FirstComponent } from './pract/first/first.component';
 import { SecondComponent } from './pract/second/second.component';
 import { Title } from '@angular/platform-browser';
+import { ThirdComponent } from './pract/third/third.component';
 
 @Injectable({ providedIn: 'root' })
 export class TemplatePageTitleStrategy extends TitleStrategy {
@@ -50,6 +51,7 @@ const routes: Routes = [
     ],
   },
   { path: 'second-component/:name', component: SecondComponent },
+  { path: 'third-component', component: ThirdComponent },
   {
     path: '',
     redirectTo: 'first-component/',

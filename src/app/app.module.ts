@@ -19,6 +19,7 @@ import { SecondComponent } from './pract/second/second.component';
 import { NotFoundComponent } from './pract/not-found/not-found.component';
 import { ChildAComponent } from './pract/first-component/child-a/child-a.component';
 import { ChildBComponent } from './pract/first-component/child-b/child-b.component';
+import { ThirdComponent } from './pract/third/third.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { ChildBComponent } from './pract/first-component/child-b/child-b.compone
     NotFoundComponent,
     ChildAComponent,
     ChildBComponent,
+    ThirdComponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
   providers: [ShoppingListService],
