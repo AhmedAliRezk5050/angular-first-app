@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-first',
@@ -9,12 +9,17 @@ import { ActivatedRoute } from '@angular/router';
 export class FirstComponent implements OnInit {
   name?: string;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       const x = params['name'];
       this.name = !!params['name'] ? params['name'] : 'default name';
     });
+  }
+
+  moveTo(e: Event) {
+    e.preventDefault();
+    this.router.navigate(['/third-component'], { relativeTo: this.route });
   }
 }
