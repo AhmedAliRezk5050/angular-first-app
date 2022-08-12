@@ -20,6 +20,9 @@ import { NotFoundComponent } from './pract/not-found/not-found.component';
 import { ChildAComponent } from './pract/first-component/child-a/child-a.component';
 import { ChildBComponent } from './pract/first-component/child-b/child-b.component';
 import { ThirdComponent } from './pract/third/third.component';
+import { AuthService } from './pract/auth.service';
+import { AuthGuard } from './pract/auth-guard.service';
+import { NotAllowedComponent } from './pract/not-allowed/not-allowed.component';
 
 @NgModule({
   declarations: [
@@ -39,9 +42,10 @@ import { ThirdComponent } from './pract/third/third.component';
     ChildAComponent,
     ChildBComponent,
     ThirdComponent,
+    NotAllowedComponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
-  providers: [ShoppingListService],
+  providers: [ShoppingListService, AuthService, AuthGuard],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

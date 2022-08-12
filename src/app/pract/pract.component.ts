@@ -1,3 +1,4 @@
+import { AuthService } from './auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -8,7 +9,19 @@ import { Component, OnInit } from '@angular/core';
 export class PractComponent implements OnInit {
   message: string = 'ali';
 
-  constructor() {}
+  authStatus = 'Guest';
+
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {}
+
+  login() {
+    this.authService.login();
+    this.authStatus = 'Member';
+  }
+
+  logout() {
+    this.authService.logout();
+    this.authStatus = 'Guest';
+  }
 }

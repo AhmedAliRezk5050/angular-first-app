@@ -7,13 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./third.component.css'],
 })
 export class ThirdComponent implements OnInit {
-  constructor(private route: ActivatedRoute) {
-    this.route.queryParams.subscribe((queryParams) =>
-      console.log(queryParams['name']),
-    );
-
-    this.route.fragment.subscribe((fragment) => console.log(fragment));
-  }
+  constructor() {}
 
   ngOnInit(): void {}
 }

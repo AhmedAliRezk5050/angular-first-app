@@ -13,6 +13,8 @@ import { FirstComponent } from './pract/first/first.component';
 import { SecondComponent } from './pract/second/second.component';
 import { Title } from '@angular/platform-browser';
 import { ThirdComponent } from './pract/third/third.component';
+import { AuthGuard } from './pract/auth-guard.service';
+import { NotAllowedComponent } from './pract/not-allowed/not-allowed.component';
 
 @Injectable({ providedIn: 'root' })
 export class TemplatePageTitleStrategy extends TitleStrategy {
@@ -51,7 +53,15 @@ const routes: Routes = [
     ],
   },
   { path: 'second-component/:name', component: SecondComponent },
-  { path: 'third-component', component: ThirdComponent },
+  {
+    path: 'third-component',
+    component: ThirdComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'not-allowed',
+    component: NotAllowedComponent,
+  },
   {
     path: '',
     redirectTo: 'first-component/',

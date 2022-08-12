@@ -1,4 +1,17 @@
 <h1 class="mb-3">Practise</h1>
+<div class="m-3">
+  <button class="btn btn-success m-2" (click)="login()">login</button>
+  <button class="btn btn-danger m-2" (click)="logout()">logout</button>
+  <div
+    class="m-2 alert"
+    [ngClass]="{
+      'alert-success': authStatus === 'Member',
+      'alert-warning': authStatus === 'Guest'
+    }"
+  >
+    {{ authStatus }}
+  </div>
+</div>
 <nav>
   <ul>
     <li>
