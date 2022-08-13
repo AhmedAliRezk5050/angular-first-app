@@ -23,6 +23,7 @@ import { ThirdComponent } from './pract/third/third.component';
 import { AuthService } from './pract/auth.service';
 import { AuthGuard } from './pract/auth-guard.service';
 import { NotAllowedComponent } from './pract/not-allowed/not-allowed.component';
+import {CanDeactivateGuard} from "./pract/can-deactivate-guard.service";
 
 @NgModule({
   declarations: [
@@ -45,7 +46,7 @@ import { NotAllowedComponent } from './pract/not-allowed/not-allowed.component';
     NotAllowedComponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
-  providers: [ShoppingListService, AuthService, AuthGuard],
+  providers: [ShoppingListService, AuthService, AuthGuard, CanDeactivateGuard],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
