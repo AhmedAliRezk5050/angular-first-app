@@ -16,6 +16,7 @@ import { ThirdComponent } from "./pract/third/third.component";
 import { AuthGuard } from "./pract/auth-guard.service";
 import { NotAllowedComponent } from "./pract/not-allowed/not-allowed.component";
 import { CanDeactivateGuard } from "./pract/can-deactivate-guard.service";
+import {UserDataResolver} from "./pract/user-data-resolver.service";
 
 @Injectable({ providedIn: "root" })
 export class TemplatePageTitleStrategy extends TitleStrategy {
@@ -43,6 +44,7 @@ const routes: Routes = [
     path: "first-component/:name",
     component: FirstComponent,
     canActivateChild: [AuthGuard],
+    resolve: {userData: UserDataResolver},
     children: [
       {
         path: "child-a",

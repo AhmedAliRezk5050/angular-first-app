@@ -1,5 +1,8 @@
 <p>first works!</p>
-<p class="mb-3">Name: {{ name }}</p>
+<div class="m-2" *ngIf="userData">
+  <p class="mb-3">Name: {{ userData.name }}</p>
+  <p class="mb-3">Age: {{ userData.age }}</p>
+</div>
 <nav>
   <ul>
     <li>

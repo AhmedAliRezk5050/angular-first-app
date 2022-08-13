@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, Data, Router} from '@angular/router';
 
 @Component({
   selector: 'app-first',
@@ -7,15 +7,14 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./first.component.css'],
 })
 export class FirstComponent implements OnInit {
-  name?: string;
+  userData?: data.UserData;
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      const x = params['name'];
-      this.name = !!params['name'] ? params['name'] : 'default name';
-    });
+    this.route.data.subscribe((data: Data) => {
+      this.userData = data['userData']
+    })
   }
 
   moveTo(e: Event) {
