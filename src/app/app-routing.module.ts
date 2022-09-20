@@ -17,10 +17,10 @@ import {RecipeEditComponent} from "./recipes/recipe-edit/recipe-edit.component";
 const routes: Routes = [
   {path: '', redirectTo: `/${AppRoutes.Recipes}`, pathMatch: "full"},
   {path: AppRoutes.Recipes, component: RecipesComponent, children: [
-      {path: ``, component: RecipeStartComponent},
+      {path: '', component: RecipeStartComponent},
       {path: 'new', component: RecipeEditComponent},
-      {path: `:id`, component: RecipeDetailComponent},
-      {path: `:id/edit`, component: RecipeEditComponent},
+      {path: ':id', component: RecipeDetailComponent},
+      {path: ':id/edit', component: RecipeEditComponent},
     ]},
   {path: AppRoutes.ShoppingList, component: ShoppingListComponent},
   {path: AppRoutes.NotFound, component: NotFoundComponent},
