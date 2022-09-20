@@ -9,13 +9,15 @@ import {AppRoutes} from "./shared/AppRoutes";
 import {RecipeDetailComponent} from "./recipes/recipe-detail/recipe-detail.component";
 import {RecipeResolver} from "./resolvers/RecipeResolver";
 import {NotFoundComponent} from "./not-found/not-found.component";
+import {RecipeStartComponent} from "./recipes/recipe-start/recipe-start.component";
 
 
 
 const routes: Routes = [
   {path: '', redirectTo: `/${AppRoutes.Recipes}`, pathMatch: "full"},
   {path: AppRoutes.Recipes, component: RecipesComponent, children: [
-      {path: `:id`, component: RecipeDetailComponent, resolve: {recipe: RecipeResolver}}
+      {path: ``, component: RecipeStartComponent},
+      {path: `:id`, component: RecipeDetailComponent}
     ]},
   {path: AppRoutes.ShoppingList, component: ShoppingListComponent},
   {path: AppRoutes.NotFound, component: NotFoundComponent},
