@@ -15,8 +15,7 @@ export class RecipeDetailComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  updateShoppingList(e: Event) {
-    e.preventDefault();
+  updateShoppingList() {
     this.recipeService.updateShoppingListIngredientsFromRecipe(
       this.recipe.ingredients,
     );

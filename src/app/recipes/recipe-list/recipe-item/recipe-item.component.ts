@@ -25,8 +25,7 @@ export class RecipeItemComponent implements OnInit {
     // this.recipeService.addRecipe(recipe);
   }
 
-  onRecipeSelected(e: Event) {
-    e.preventDefault();
+  onRecipeSelected() {
     this.recipeService.recipeSelected.emit(this.recipe);
   }
 }
