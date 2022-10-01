@@ -46,17 +46,18 @@ export class ShoppingEditComponent implements OnInit {
 
   upsertIngredient(form: NgForm) {
     const formValue = form.value;
+    const pendingUpsertIngredient =  new Ingredient(formValue.name, +formValue.amount);
     if (this.editMode) {
-      this.shoppingListService.updateIngredient(this.pendingEditIngredientIndex, new Ingredient(formValue.name, +formValue.amount));
+      this.shoppingListService.updateIngredient(this.pendingEditIngredientIndex, pendingUpsertIngredient);
       this.editMode = false;
     } else {
-      this.shoppingListService.addIngredient(
-        new Ingredient(
-          formValue.name,
-          +formValue.amount,
-        ),
-      );
+      this.shoppingListService.addIngredient(pendingUpsertIngredient);
     }
     this.form?.reset();
+  }
+
+  clearForm() {
+    this.form?.reset();
+    this.editMode = false;
   }
 }
