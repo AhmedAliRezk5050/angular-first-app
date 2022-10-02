@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {FormArray, FormControl, FormGroup} from "@angular/forms";
+import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {RecipeService} from "../recipe.service";
 import {Ingredient} from "../../shared/ingredient.model";
 
@@ -15,15 +15,16 @@ export class RecipeEditComponent implements OnInit {
   modeMessage = "new"
   recipeForm!: FormGroup
 
-  get recipeFormControls()  {
+  get recipeFormControls() {
     return this.recipeForm.controls;
-}
+  }
 
-get ingredientsFormArray() {
+  get ingredientsFormArray() {
     return (this.recipeForm.get('ingredients') as FormArray)
-}
+  }
 
-  constructor(private route: ActivatedRoute, private recipeService: RecipeService) { }
+  constructor(private route: ActivatedRoute, private recipeService: RecipeService) {
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(({id}) => {
@@ -40,7 +41,7 @@ get ingredientsFormArray() {
     let imagePath = ''
     let ingredients: Ingredient[] = [];
 
-    if(this.editMode) {
+    if (this.editMode) {
       const recipe = this.recipeService.getRecipe(this.id!);
       name = recipe!.name;
       description = recipe!.description;
@@ -49,16 +50,17 @@ get ingredientsFormArray() {
     }
 
     this.recipeForm = new FormGroup({
-      'name': new FormControl(name),
-      'description': new FormControl(description),
-      'imagePath': new FormControl(imagePath),
+      'name': new FormControl(name, Validators.required),
+      'description': new FormControl(description, Validators.required),
+      'imagePath': new FormControl(imagePath, Validators.required),
       'ingredients': new FormArray([])
     });
 
     ingredients.forEach(ing => {
       this.ingredientsFormArray.push(new FormGroup({
-        'name': new FormControl(ing.name),
-        'amount': new FormControl(ing.amount)
+        'name': new FormControl(ing.name, Validators.required),
+        'amount': new FormControl(ing.amount,
+          [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
       }))
     })
   }
@@ -69,8 +71,9 @@ get ingredientsFormArray() {
 
   onAddIngredient() {
     this.ingredientsFormArray.push(new FormGroup({
-      'name': new FormControl(null),
-      'amount': new FormControl(null)
+      'name': new FormControl(null, Validators.required),
+      'amount': new FormControl(null,
+        [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
     }))
   }
 }
