@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {RecipeService} from "../recipe.service";
 import {Ingredient} from "../../shared/ingredient.model";
@@ -15,15 +15,12 @@ export class RecipeEditComponent implements OnInit {
   modeMessage = "new"
   recipeForm!: FormGroup
 
-  get recipeFormControls() {
-    return this.recipeForm.controls;
-  }
 
   get ingredientsFormArray() {
     return (this.recipeForm.get('ingredients') as FormArray)
   }
 
-  constructor(private route: ActivatedRoute, private recipeService: RecipeService) {
+  constructor(private route: ActivatedRoute, private recipeService: RecipeService, private router:Router) {
   }
 
   ngOnInit(): void {
@@ -66,7 +63,14 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.recipeForm.value)
+    const formValue = this.recipeForm.value;
+    console.log(formValue)
+    if(this.editMode) {
+      this.recipeService.editRecipe({id: this.id, ...formValue})
+    } else {
+      this.recipeService.addRecipe({...formValue})
+    }
+    this.router.navigate(['/recipes'])
   }
 
   onAddIngredient() {
@@ -75,5 +79,9 @@ export class RecipeEditComponent implements OnInit {
       'amount': new FormControl(null,
         [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
     }))
+  }
+
+  onCancel() {
+    this.router.navigate(['/recipes'])
   }
 }
