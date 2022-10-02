@@ -8,11 +8,13 @@
 
       <div class="mb-3">
         <label for="img-url">Image Url</label>
-        <input type="text" class="form-control" id="img-url" formControlName="imagePath">
+        <input type="text" class="form-control" id="img-url" formControlName="imagePath" #imgPath>
       </div>
 
-      <div class="mb-3">
-        <img src="" alt="" class="img-fluid">
+      <div class="row mb-3">
+        <div class="col-3">
+          <img [src]="imgPath.value" alt="" class="img-fluid">
+        </div>
       </div>
 
       <div class="mb-3">
