@@ -10,10 +10,12 @@
         <input type="password" class="form-control" id="password" placeholder="Enter password">
       </div>
       <div class="mb-3">
-        <button class="btn btn-primary" type="submit">Sign Up</button>
+        <button class="btn btn-primary" type="submit">{{logInMode ? 'Login' : 'Sign Up'}}</button>
       </div>
       <div class="">
-        <button class="btn btn-sm btn-secondary" type="button">Switch to Log In</button>
+        <button class="btn btn-sm btn-secondary" type="button" (click)="onSwitchAuthModes()">
+          Switch to {{logInMode ? 'Sign Up' : 'Login'}}
+        </button>
       </div>
     </form>
   </div>
