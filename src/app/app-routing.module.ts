@@ -12,6 +12,7 @@ import {NotFoundComponent} from "./not-found/not-found.component";
 import {RecipeStartComponent} from "./recipes/recipe-start/recipe-start.component";
 import {RecipeEditComponent} from "./recipes/recipe-edit/recipe-edit.component";
 import RecipesResolverService from "./recipes/recipes-resolver.service";
+import {AuthComponent} from "./auth/auth.component";
 
 
 
@@ -28,6 +29,7 @@ const routes: Routes = [
       {path: ':id/edit', component: RecipeEditComponent},
     ]},
   {path: AppRoutes.ShoppingList, component: ShoppingListComponent},
+  {path: AppRoutes.Auth, component: AuthComponent},
   {path: AppRoutes.NotFound, component: NotFoundComponent},
   {path: '**', redirectTo: AppRoutes.NotFound},
 ];
