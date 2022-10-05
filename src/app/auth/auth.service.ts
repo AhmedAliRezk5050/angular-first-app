@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 interface SignUpResponse {
   idToken: string;
@@ -31,7 +33,13 @@ export class AuthService {
       {
         params: {key: this.key}
       }
-    )
+    ).pipe(catchError(errorResponse => {
+      let errorMessage = 'Failed to sign up'
+      if(errorResponse.error?.error?.message && errorResponse.error.error.message === 'EMAIL_EXISTS') {
+        errorMessage = 'Email already exists'
+      }
+      throw new Error(errorMessage);
+    }))
   }
 
   signIn(email: string, password: string) {

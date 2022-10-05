@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForm} from "@angular/forms";
 import {AuthService} from "./auth.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-auth',
@@ -28,11 +29,10 @@ export class AuthComponent implements OnInit {
     if (this.logInMode) {
       this.authService.signIn(email, password).subscribe({
         next: res => {
-          console.log(res);
           authForm.reset();
           this.isLoading = false
         },
-        error: () => {
+        error: (errorResponse: HttpErrorResponse) => {
           this.error = 'Auth failed'
           this.isLoading = false
         }
@@ -40,12 +40,11 @@ export class AuthComponent implements OnInit {
     } else {
       this.authService.signUp(email, password).subscribe({
         next: res => {
-          console.log(res);
           authForm.reset();
           this.isLoading = false
         },
-        error: () => {
-          this.error = 'Auth failed'
+        error: errorMessage => {
+          this.error = errorMessage;
           this.isLoading = false
         }
       })
