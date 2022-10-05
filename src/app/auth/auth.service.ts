@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {catchError} from 'rxjs/operators';
-import {Observable, throwError} from 'rxjs';
+import {catchError, tap} from 'rxjs/operators';
+import {Observable, Subject, throwError} from 'rxjs';
+import User from "./user.model";
 
 interface SignUpResponse {
   idToken: string;
@@ -25,7 +26,7 @@ interface LoginResponse extends SignUpResponse {
   providedIn: 'root'
 })
 export class AuthService {
-
+  userSubject = new Subject<User | null>()
 
   private key = 'AIzaSyBqIwnjLvSM3QKHrXWtakQlyWFFrwsaXCk'
 
@@ -38,7 +39,9 @@ export class AuthService {
       {
         params: {key: this.key}
       }
-    ).pipe(catchError(this.handleError))
+    ).pipe(tap(({email, idToken, localId, expiresIn}) =>
+        this.storeUserData(email, localId, expiresIn, idToken)),
+      catchError(this.handleError))
   }
 
   signIn(email: string, password: string) {
@@ -47,7 +50,9 @@ export class AuthService {
       {
         params: {key: this.key}
       }
-    ).pipe(catchError(this.handleError))
+    ).pipe(tap(({email, idToken, localId, expiresIn}) =>
+        this.storeUserData(email, localId, expiresIn, idToken)),
+      catchError(this.handleError))
   }
 
   private handleError = (errorResponse: any, caught: Observable<SignUpResponse | LoginResponse>) => {
@@ -70,5 +75,12 @@ export class AuthService {
 
     throw new Error(errorMessage);
   }
+
+  private storeUserData = (email: string, id: string, expiresIn: string, token: string) => {
+    const user = new User(email, id, token, new Date(Date.now() + (+expiresIn * 1000)));
+    console.log(user);
+    this.userSubject.next(user);
+  }
+
 }
 

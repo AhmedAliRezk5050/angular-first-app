@@ -20,16 +20,21 @@ export default class DataStorageService {
   }
 
   fetchRecipes() {
-    return this.http.get<Recipe[]>(this.url, {params: {'print': 'pretty'}})
+    return this.http.get<Recipe[]>(this.url,
+      {
+        params: {
+          'print': 'pretty'
+        }
+      })
       .pipe(map(
-        data => {
-          return data.map(recipe => {
-            if (recipe.ingredients) return recipe;
-            recipe.ingredients = [];
-            return recipe;
-          })
-        }),
+          data => {
+            return data.map(recipe => {
+              if (recipe.ingredients) return recipe;
+              recipe.ingredients = [];
+              return recipe;
+            })
+          }),
         tap(data => this.recipeService.setRecipes(data))
-        );
+      );
   }
 }
