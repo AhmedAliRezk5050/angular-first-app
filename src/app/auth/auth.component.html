@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-12 col-md-6 offset-md-3">
     <div class="alert alert-danger" *ngIf="!isLoading && error">{{error}}</div>
-    <div class="d-flex justify-content-center" *ngIf="isLoading && !error">
+    <div class="d-flex justify-content-center" *ngIf="isLoading">
       <app-loading-spinner></app-loading-spinner>
     </div>
     <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">

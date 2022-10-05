@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import {catchError} from 'rxjs/operators';
+import {Observable, throwError} from 'rxjs';
 
 interface SignUpResponse {
   idToken: string;
@@ -11,8 +11,13 @@ interface SignUpResponse {
   localId: string;
 }
 
+enum ResponseErrorMessage {
+  EmailNotFound = 'EMAIL_NOT_FOUND',
+  WrongPassword = 'INVALID_PASSWORD',
+  EmailExists = 'EMAIL_EXISTS'
+}
 
-interface LoginResponse extends SignUpResponse{
+interface LoginResponse extends SignUpResponse {
   registered: boolean;
 }
 
@@ -33,13 +38,7 @@ export class AuthService {
       {
         params: {key: this.key}
       }
-    ).pipe(catchError(errorResponse => {
-      let errorMessage = 'Failed to sign up'
-      if(errorResponse.error?.error?.message && errorResponse.error.error.message === 'EMAIL_EXISTS') {
-        errorMessage = 'Email already exists'
-      }
-      throw new Error(errorMessage);
-    }))
+    ).pipe(catchError(this.handleError))
   }
 
   signIn(email: string, password: string) {
@@ -48,6 +47,28 @@ export class AuthService {
       {
         params: {key: this.key}
       }
-    )
+    ).pipe(catchError(this.handleError))
+  }
+
+  private handleError = (errorResponse: any, caught: Observable<SignUpResponse | LoginResponse>) => {
+    let errorMessage = 'Unknown error occurred'
+
+    const serverErrorMessage: ResponseErrorMessage | undefined = errorResponse.error?.error?.message;
+
+    if (!serverErrorMessage) throw new Error(errorMessage);
+
+    switch (serverErrorMessage) {
+      case ResponseErrorMessage.EmailNotFound:
+        errorMessage = 'No user found with the provided email';
+        break;
+      case ResponseErrorMessage.WrongPassword:
+        errorMessage = 'Wrong Password';
+        break;
+      case ResponseErrorMessage.EmailExists:
+        errorMessage = 'Email already exists';
+    }
+
+    throw new Error(errorMessage);
   }
 }
+
