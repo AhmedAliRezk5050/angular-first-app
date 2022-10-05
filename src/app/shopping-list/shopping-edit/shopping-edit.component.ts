@@ -35,8 +35,6 @@ export class ShoppingEditComponent implements OnInit {
         this.editMode = true;
         this.pendingEditIngredientIndex = index;
         this.pendingEditIngredient = this.shoppingListService.getIngredient(index);
-        console.log(this.pendingEditIngredient)
-        console.log(this.form?.value)
         this.form?.setValue({
           name: this.pendingEditIngredient.name,
           amount: this.pendingEditIngredient.amount,

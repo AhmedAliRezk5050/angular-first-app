@@ -17,8 +17,6 @@ export class DropdownDirective {
 
   @HostListener('click')
   onClick() {
-    console.log('onClick');
-
     this.isVisible = !this.isVisible;
 
     if (this.isVisible) {
