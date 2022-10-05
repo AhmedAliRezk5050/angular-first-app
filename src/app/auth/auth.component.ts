@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {NgForm} from "@angular/forms";
 import {AuthService} from "./auth.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-auth',
@@ -26,28 +27,23 @@ export class AuthComponent implements OnInit {
   onSubmit(authForm: NgForm) {
     const {email, password} = authForm.value
     this.isLoading = true
-    if (this.logInMode) {
-      this.authService.signIn(email, password).subscribe({
-        next: res => {
-          authForm.reset();
-          this.isLoading = false
-        },
-        error: (errorResponse: HttpErrorResponse) => {
-          this.error = 'Auth failed'
-          this.isLoading = false
-        }
-      })
-    } else {
-      this.authService.signUp(email, password).subscribe({
-        next: res => {
-          authForm.reset();
-          this.isLoading = false
-        },
-        error: errorMessage => {
-          this.error = errorMessage;
-          this.isLoading = false
-        }
-      })
-    }
+
+    const authObs = this.logInMode ?
+      this.authService.signIn(email, password)
+      : this.authService.signUp(email, password)
+
+    authObs.subscribe({
+      next: () => {
+        authForm.reset();
+        this.error = null;
+        this.isLoading = false
+      },
+      error: errorMessage => {
+        this.error = errorMessage;
+        this.isLoading = false
+      }
+    })
+
+
   }
 }
