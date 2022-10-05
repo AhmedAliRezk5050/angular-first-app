@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {catchError, tap} from 'rxjs/operators';
-import {Observable, Subject, throwError} from 'rxjs';
+import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
 import User from "./user.model";
 
 interface SignUpResponse {
@@ -26,7 +26,9 @@ interface LoginResponse extends SignUpResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  userSubject = new Subject<User | null>()
+  // BehaviorSubject holds the prev value in addition to upcoming values,
+  // so we use it to get user value on demand
+  userSubject = new BehaviorSubject<User | null>(null)
 
   private key = 'AIzaSyBqIwnjLvSM3QKHrXWtakQlyWFFrwsaXCk'
 
