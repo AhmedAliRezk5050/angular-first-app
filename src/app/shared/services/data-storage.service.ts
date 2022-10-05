@@ -25,7 +25,6 @@ export default class DataStorageService {
 
   fetchRecipes() {
     return this.authService.userSubject.pipe(take(1), exhaustMap(user => {
-      debugger
         return this.http.get<Recipe[]>(this.url,
           {
             params: {

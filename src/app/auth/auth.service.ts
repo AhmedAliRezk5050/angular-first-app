@@ -80,7 +80,6 @@ export class AuthService {
 
   private storeUserData = (email: string, id: string, expiresIn: string, token: string) => {
     const user = new User(email, id, token, new Date(Date.now() + (+expiresIn * 1000)));
-    console.log(user);
     this.userSubject.next(user);
   }
 
