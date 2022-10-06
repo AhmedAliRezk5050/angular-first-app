@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {catchError, tap} from 'rxjs/operators';
 import {BehaviorSubject, Observable, Subject, throwError} from 'rxjs';
 import User from "./user.model";
+import {Router} from "@angular/router";
 
 interface SignUpResponse {
   idToken: string;
@@ -29,6 +30,8 @@ export class AuthService {
   // BehaviorSubject holds the prev value in addition to upcoming values,
   // so we use it to get user value on demand
   userSubject = new BehaviorSubject<User | null>(null)
+
+  logoutTimer: any
 
   private key = 'AIzaSyBqIwnjLvSM3QKHrXWtakQlyWFFrwsaXCk'
 
@@ -59,22 +62,32 @@ export class AuthService {
 
   logout() {
     this.userSubject.next(null);
+    localStorage.removeItem('userData');
   }
 
   autoLogin() {
     const userData = localStorage.getItem('userData');
 
-    if(!userData) return;
+    if (!userData) return;
 
-    const {id, email, _token, _tokenExpirationDate} = JSON.parse(userData) as {[key: string]: string};
+    const {id, email, _token, _tokenExpirationDate} = JSON.parse(userData) as { [key: string]: string };
 
     const user = new User(email, id, _token, new Date(_tokenExpirationDate))
 
-    if(!user.token) return;
+    if (!user.token) return;
 
     this.userSubject.next(user);
+  }
 
-    console.log('u-----', user);
+  autoLogout(expiryDuration: number) {
+    this.logoutTimer = setTimeout(() => {
+      this.logout();
+    }, expiryDuration)
+  }
+
+  resetAutoLogout() {
+    clearTimeout(this.logoutTimer);
+    this.logoutTimer = null;
   }
 
   private handleError = (errorResponse: any, caught: Observable<SignUpResponse | LoginResponse>) => {
