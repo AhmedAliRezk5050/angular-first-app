@@ -61,6 +61,22 @@ export class AuthService {
     this.userSubject.next(null);
   }
 
+  autoLogin() {
+    const userData = localStorage.getItem('userData');
+
+    if(!userData) return;
+
+    const {id, email, _token, _tokenExpirationDate} = JSON.parse(userData) as {[key: string]: string};
+
+    const user = new User(email, id, _token, new Date(_tokenExpirationDate))
+
+    if(!user.token) return;
+
+    this.userSubject.next(user);
+
+    console.log('u-----', user);
+  }
+
   private handleError = (errorResponse: any, caught: Observable<SignUpResponse | LoginResponse>) => {
     let errorMessage = 'Unknown error occurred'
 
@@ -85,7 +101,7 @@ export class AuthService {
   private storeUserData = (email: string, id: string, expiresIn: string, token: string) => {
     const user = new User(email, id, token, new Date(Date.now() + (+expiresIn * 1000)));
     this.userSubject.next(user);
+    localStorage.setItem('userData', JSON.stringify(user));
   }
 
 }
-
