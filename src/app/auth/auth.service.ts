@@ -57,6 +57,10 @@ export class AuthService {
       catchError(this.handleError))
   }
 
+  logout() {
+    this.userSubject.next(null);
+  }
+
   private handleError = (errorResponse: any, caught: Observable<SignUpResponse | LoginResponse>) => {
     let errorMessage = 'Unknown error occurred'
 
