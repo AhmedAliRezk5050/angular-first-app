@@ -35,7 +35,7 @@ export class AuthService {
 
   private key = 'AIzaSyBqIwnjLvSM3QKHrXWtakQlyWFFrwsaXCk'
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
   }
 
   signUp(email: string, password: string) {
@@ -63,6 +63,8 @@ export class AuthService {
   logout() {
     this.userSubject.next(null);
     localStorage.removeItem('userData');
+    this.resetAutoLogout();
+    this.router.navigate(['/auth'])
   }
 
   autoLogin() {
@@ -77,9 +79,12 @@ export class AuthService {
     if (!user.token) return;
 
     this.userSubject.next(user);
+
+    this.autoLogout(user.tokenExpiryDuration);
   }
 
   autoLogout(expiryDuration: number) {
+    console.log(expiryDuration)
     this.logoutTimer = setTimeout(() => {
       this.logout();
     }, expiryDuration)
@@ -114,6 +119,7 @@ export class AuthService {
   private storeUserData = (email: string, id: string, expiresIn: string, token: string) => {
     const user = new User(email, id, token, new Date(Date.now() + (+expiresIn * 1000)));
     this.userSubject.next(user);
+    this.autoLogout(user.tokenExpiryDuration)
     localStorage.setItem('userData', JSON.stringify(user));
   }
 

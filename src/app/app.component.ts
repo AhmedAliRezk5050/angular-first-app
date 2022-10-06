@@ -10,21 +10,11 @@ import {Router} from "@angular/router";
 export class AppComponent implements OnInit {
 
   constructor(
-    private authService: AuthService,
-    private router: Router) {
+    private authService: AuthService) {
   }
 
   ngOnInit(): void {
     this.authService.autoLogin();
-    this.authService.userSubject.subscribe(user => {
-      if (user) {
-        console.log(user.tokenExpiryDuration)
-        this.authService.autoLogout(user.tokenExpiryDuration)
-      } else {
-        this.authService.resetAutoLogout()
-        this.router.navigate(['/auth'])
-      }
-    })
   }
 }
 

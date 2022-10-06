@@ -15,9 +15,6 @@ export default class RecipesResolverService implements Resolve<Recipe[]> {
   resolve(route: ActivatedRouteSnapshot,
           state: RouterStateSnapshot
   ): Observable<Recipe[]> | Promise<Recipe[]> | Recipe[] {
-    return this.dataStorageService.fetchRecipes().pipe(catchError(() => {
-      this.router.navigate(['/auth'])
-      return EMPTY;
-    }))
+    return this.dataStorageService.fetchRecipes();
   }
 }
