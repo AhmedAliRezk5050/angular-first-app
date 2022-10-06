@@ -37,7 +37,6 @@ export class AuthComponent implements OnInit {
       next: () => {
         authForm.reset();
         this.error = null;
-        this.isLoading = false;
         this.router.navigate(['/recipes'])
       },
       error: err => {
