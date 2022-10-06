@@ -24,15 +24,13 @@ export default class DataStorageService {
   }
 
   fetchRecipes() {
-    return this.authService.userSubject.pipe(take(1), exhaustMap(user => {
-        return this.http.get<Recipe[]>(this.url,
-          {
-            params: {
-              'print': 'pretty',
-              auth: user?.token ?? ''
-            }
-          })
-      }), map(
+    return this.http.get<Recipe[]>(this.url,
+      {
+        params: {
+          'print': 'pretty'
+        }
+      }).pipe(
+      map(
         data => {
           return data.map(recipe => {
             if (recipe.ingredients) return recipe;
@@ -40,6 +38,7 @@ export default class DataStorageService {
             return recipe;
           })
         }),
-      tap(data => this.recipeService.setRecipes(data)));
+      tap(data => this.recipeService.setRecipes(data))
+    )
   }
 }
