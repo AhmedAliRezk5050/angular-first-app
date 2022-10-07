@@ -1,6 +1,11 @@
 <div class="row">
   <div class="col-12 col-md-6 offset-md-3">
-    <div class="alert alert-danger" *ngIf="!isLoading && error">{{error}}</div>
+    <app-alert
+      *ngIf="!isLoading && error"
+      [message]="error"
+      (close)="handleError()"
+    ></app-alert>
+
     <div class="d-flex justify-content-center" *ngIf="isLoading">
       <app-loading-spinner></app-loading-spinner>
     </div>
@@ -16,7 +21,7 @@
           ngModel
           required
           email
-        >
+        />
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
@@ -29,15 +34,24 @@
           ngModel
           required
           minlength="6"
-        >
+        />
       </div>
       <div class="mb-3">
-        <button class="btn btn-primary" type="submit"
-                [disabled]="authForm.invalid">{{logInMode ? 'Login' : 'Sign Up'}}</button>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="authForm.invalid"
+        >
+          {{ logInMode ? 'Login' : 'Sign Up' }}
+        </button>
       </div>
       <div class="">
-        <button class="btn btn-sm btn-secondary" type="button" (click)="onSwitchAuthModes()">
-          Switch to {{logInMode ? 'Sign Up' : 'Login'}}
+        <button
+          class="btn btn-sm btn-secondary"
+          type="button"
+          (click)="onSwitchAuthModes()"
+        >
+          Switch to {{ logInMode ? 'Sign Up' : 'Login' }}
         </button>
       </div>
     </form>
