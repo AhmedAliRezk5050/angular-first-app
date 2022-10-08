@@ -7,8 +7,6 @@ import { AuthComponent } from './auth/auth.component';
 
 const routes: Routes = [
   { path: '', redirectTo: `/${AppRoutes.Recipes}`, pathMatch: 'full' },
-  { path: AppRoutes.Auth, component: AuthComponent },
-  { path: AppRoutes.NotFound, component: NotFoundComponent },
   { path: '**', redirectTo: AppRoutes.NotFound },
 ];
 
