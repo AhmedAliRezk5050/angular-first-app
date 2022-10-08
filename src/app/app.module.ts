@@ -1,3 +1,4 @@
+import { SharedModule } from './shared/shared.module';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -9,9 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthComponent } from './auth/auth.component';
-import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
-import { AlertComponent } from './shared/alert/alert.component';
 import { AlertHostDirective } from './shared/directives/alert-host.directive';
 import { RecipesModule } from './recipes/recipes.module';
 import { ShoppingListModule } from './shopping-list/shopping-list.module';
@@ -20,12 +19,8 @@ import { ShoppingListModule } from './shopping-list/shopping-list.module';
   declarations: [
     AppComponent,
     HeaderComponent,
-    DropdownDirective,
     NotFoundComponent,
     AuthComponent,
-    LoadingSpinnerComponent,
-    AlertComponent,
-    AlertHostDirective,
   ],
   imports: [
     BrowserModule,
@@ -34,6 +29,7 @@ import { ShoppingListModule } from './shopping-list/shopping-list.module';
     HttpClientModule,
     RecipesModule,
     ShoppingListModule,
+    SharedModule,
     AppRoutingModule,
   ],
   providers: [
