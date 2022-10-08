@@ -4,8 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { ShoppingListComponent } from './shopping-list/shopping-list.component';
-import { ShoppingEditComponent } from './shopping-list/shopping-edit/shopping-edit.component';
 import { DropdownDirective } from './shared/directives/dropdown.directive';
 import { AppRoutingModule } from './app-routing.module';
 import { NotFoundComponent } from './not-found/not-found.component';
@@ -16,13 +14,12 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { AlertComponent } from './shared/alert/alert.component';
 import { AlertHostDirective } from './shared/directives/alert-host.directive';
 import { RecipesModule } from './recipes/recipes.module';
+import { ShoppingListModule } from './shopping-list/shopping-list.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    ShoppingListComponent,
-    ShoppingEditComponent,
     DropdownDirective,
     NotFoundComponent,
     AuthComponent,
@@ -31,11 +28,12 @@ import { RecipesModule } from './recipes/recipes.module';
     AlertHostDirective,
   ],
   imports: [
-    RecipesModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    RecipesModule,
+    ShoppingListModule,
     AppRoutingModule,
   ],
   providers: [
@@ -48,7 +46,3 @@ import { RecipesModule } from './recipes/recipes.module';
   bootstrap: [AppComponent],
 })
 export class AppModule {}
-
-// recipes
-// shopping-list
-// auth
