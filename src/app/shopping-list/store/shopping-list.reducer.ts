@@ -1,4 +1,5 @@
-import { createReducer, on } from '@ngrx/store';
+import { createReducer } from '@ngrx/store';
+import { immerOn } from 'ngrx-immer/store';
 import {
   addIngredient,
   updateIngredient,
@@ -23,28 +24,19 @@ export const initialState: ShoppingListFeatureState = {
 
 export const shoppingListReducer = createReducer(
   initialState,
-  on(addIngredient, (state, { ingredient }) => ({
-    ...state,
-    ingredients: [...state.ingredients, { ...ingredient }],
-  })),
-  on(addIngredients, (state, { ingredients }) => ({
-    ...state,
-    ingredients: [...state.ingredients, ...ingredients],
-  })),
-  on(updateIngredient, (state, { index, ingredient }) => {
-    const ingredients = [...state.ingredients];
-    ingredients[index] = { ...ingredient };
-    return {
-      ...state,
-      ingredients,
-    };
+  immerOn(addIngredient, (state, { ingredient }) => {
+    state.ingredients.push(ingredient);
   }),
-  on(deleteIngredient, (state, { index }) => ({
-    ...state,
-    ingredients: state.ingredients.filter((_, i) => index != i),
-  })),
-  on(setPendingEditIngredientIndex, (state, { index }) => ({
-    ...state,
-    pendingEditIngredientIndex: index,
-  })),
+  immerOn(addIngredients, (state, { ingredients }) => {
+    state.ingredients.push(...ingredients);
+  }),
+  immerOn(updateIngredient, (state, { index, ingredient }) => {
+    state.ingredients[index] = ingredient;
+  }),
+  immerOn(deleteIngredient, (state, { index }) => {
+    state.ingredients.splice(index, 1);
+  }),
+  immerOn(setPendingEditIngredientIndex, (state, { index }) => {
+    state.pendingEditIngredientIndex = index;
+  }),
 );
