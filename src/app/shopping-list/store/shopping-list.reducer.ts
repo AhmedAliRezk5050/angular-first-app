@@ -9,30 +9,21 @@ import { Ingredient } from '../../shared/ingredient.model';
 
 export const shoppingListFeatureKey = 'shoppingList';
 
-export type ShoppingListFeatureState = { ingredients: Ingredient[] };
+export type ShoppingListFeatureState = Ingredient[];
 
-export const initialState: ShoppingListFeatureState = {
-  ingredients: [{ name: 'dsd', amount: 5 }],
-};
+export const initialState: ShoppingListFeatureState = [
+  { name: 'dsd', amount: 5 },
+];
 
 export const shoppingListReducer = createReducer(
   initialState,
-  on(addIngredient, (state, { ingredient }) => ({
-    ...state,
-    ingredients: [...state.ingredients, ingredient],
-  })),
+  on(addIngredient, (state, { ingredient }) => [...state, ingredient]),
   on(updateIngredient, (state, { index, ingredient }) => {
-    const ingredients = [...state.ingredients];
+    const ingredients = [...state];
     ingredients[index] = ingredient;
-    return {
-      ...state,
-      ingredients,
-    };
+    return ingredients;
   }),
-  on(deleteIngredient, (state, { index }) => ({
-    ...state,
-    ingredients: state.ingredients
-      .slice(0, index)
-      .concat(state.ingredients.slice(index + 1, state.ingredients.length)),
-  })),
+  on(deleteIngredient, (state, { index }) =>
+    state.slice(0, index).concat(state.slice(index + 1, state.length)),
+  ),
 );

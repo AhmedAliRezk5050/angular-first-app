@@ -36,7 +36,6 @@ export class ShoppingEditComponent implements OnInit {
   startUpdatingIngredientSubscription?: Subscription;
   editMode = false;
   pendingEditIngredientIndex!: number;
-  pendingEditIngredientObs!: Observable<Ingredient>;
 
   constructor(
     private shoppingListService: ShoppingListService,
@@ -51,15 +50,14 @@ export class ShoppingEditComponent implements OnInit {
         (index: number) => {
           this.editMode = true;
           this.pendingEditIngredientIndex = index;
-          this.pendingEditIngredientObs = this.store.select(
-            selectIngredient(index),
+          firstValueFrom(this.store.select(selectIngredient(index))).then(
+            (ingredient) => {
+              this.form?.setValue({
+                name: ingredient.name,
+                amount: ingredient.amount,
+              });
+            },
           );
-          firstValueFrom(this.pendingEditIngredientObs).then((v) => {
-            this.form?.setValue({
-              name: v.name,
-              amount: v.amount,
-            });
-          });
         },
       );
   }
