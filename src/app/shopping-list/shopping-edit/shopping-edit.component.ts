@@ -77,7 +77,6 @@ export class ShoppingEditComponent implements OnInit {
       );
       this.editMode = false;
     } else {
-      // this.shoppingListService.addIngredient(pendingUpsertIngredient);
       this.store.dispatch(
         ShoppingListActions.addIngredient({
           ingredient: pendingUpsertIngredient,
