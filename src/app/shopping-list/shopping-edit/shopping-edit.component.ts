@@ -1,4 +1,10 @@
-import {Ingredient} from '../../shared/ingredient.model';
+import * as ShoppingListActions from './../store/shopping-list.actions';
+import {
+  selectIngredient,
+  selectIngredients,
+} from './../store/shopping-list.selectors';
+import { Store } from '@ngrx/store';
+import { Ingredient } from '../../shared/ingredient.model';
 import {
   Component,
   OnInit,
@@ -8,9 +14,17 @@ import {
   ElementRef,
   ContentChild,
 } from '@angular/core';
-import {ShoppingListService} from '../shopping-list.service';
-import {NgForm} from "@angular/forms";
-import {Subscription} from "rxjs";
+import { ShoppingListService } from '../shopping-list.service';
+import { NgForm } from '@angular/forms';
+import { Subscription, Observable, lastValueFrom, firstValueFrom } from 'rxjs';
+import {
+  shoppingListFeatureKey,
+  ShoppingListFeatureState,
+} from '../store/shopping-list.reducer';
+import {
+  deleteIngredient,
+  updateIngredient,
+} from '../store/shopping-list.actions';
 
 @Component({
   selector: 'app-shopping-edit',
@@ -18,38 +32,59 @@ import {Subscription} from "rxjs";
   styleUrls: ['./shopping-edit.component.css'],
 })
 export class ShoppingEditComponent implements OnInit {
-  @ViewChild('f') form?: NgForm
+  @ViewChild('f') form?: NgForm;
   startUpdatingIngredientSubscription?: Subscription;
   editMode = false;
   pendingEditIngredientIndex!: number;
-  pendingEditIngredient!: Ingredient;
+  pendingEditIngredientObs!: Observable<Ingredient>;
 
-
-  constructor(private shoppingListService: ShoppingListService) {
-  }
+  constructor(
+    private shoppingListService: ShoppingListService,
+    private store: Store<{
+      [shoppingListFeatureKey]: ShoppingListFeatureState;
+    }>,
+  ) {}
 
   ngOnInit(): void {
-    this.startUpdatingIngredientSubscription = this.shoppingListService.startUpdatingIngredient
-      .subscribe((index: number) => {
-
-        this.editMode = true;
-        this.pendingEditIngredientIndex = index;
-        this.pendingEditIngredient = this.shoppingListService.getIngredient(index);
-        this.form?.setValue({
-          name: this.pendingEditIngredient.name,
-          amount: this.pendingEditIngredient.amount,
-        })
-      })
+    this.startUpdatingIngredientSubscription =
+      this.shoppingListService.startUpdatingIngredient.subscribe(
+        (index: number) => {
+          this.editMode = true;
+          this.pendingEditIngredientIndex = index;
+          this.pendingEditIngredientObs = this.store.select(
+            selectIngredient(index),
+          );
+          firstValueFrom(this.pendingEditIngredientObs).then((v) => {
+            this.form?.setValue({
+              name: v.name,
+              amount: v.amount,
+            });
+          });
+        },
+      );
   }
 
-  upsertIngredient(form: NgForm) {
+  async upsertIngredient(form: NgForm) {
     const formValue = form.value;
-    const pendingUpsertIngredient =  new Ingredient(formValue.name, +formValue.amount);
+    const pendingUpsertIngredient = new Ingredient(
+      formValue.name,
+      +formValue.amount,
+    );
     if (this.editMode) {
-      this.shoppingListService.updateIngredient(this.pendingEditIngredientIndex, pendingUpsertIngredient);
+      this.store.dispatch(
+        updateIngredient({
+          index: this.pendingEditIngredientIndex,
+          ingredient: pendingUpsertIngredient,
+        }),
+      );
       this.editMode = false;
     } else {
-      this.shoppingListService.addIngredient(pendingUpsertIngredient);
+      // this.shoppingListService.addIngredient(pendingUpsertIngredient);
+      this.store.dispatch(
+        ShoppingListActions.addIngredient({
+          ingredient: pendingUpsertIngredient,
+        }),
+      );
     }
     this.form?.reset();
   }
@@ -60,7 +95,12 @@ export class ShoppingEditComponent implements OnInit {
   }
 
   deleteIngredient() {
-    this.shoppingListService.deleteIngredient(this.pendingEditIngredientIndex)
+    // this.shoppingListService.deleteIngredient(this.pendingEditIngredientIndex);
+    this.store.dispatch(
+      ShoppingListActions.deleteIngredient({
+        index: this.pendingEditIngredientIndex,
+      }),
+    );
     this.clearForm();
   }
 }
