@@ -4,30 +4,47 @@ import {
   updateIngredient,
   deleteIngredient,
   addIngredients,
+  setPendingEditIngredientIndex,
 } from './shopping-list.actions';
 
 import { Ingredient } from '../../shared/ingredient.model';
 
 export const shoppingListFeatureKey = 'shoppingList';
 
-export type ShoppingListFeatureState = Ingredient[];
+export type ShoppingListFeatureState = {
+  ingredients: Ingredient[];
+  pendingEditIngredientIndex: number | null;
+};
 
-export const initialState: ShoppingListFeatureState = [
-  { name: 'dsd', amount: 5 },
-];
+export const initialState: ShoppingListFeatureState = {
+  ingredients: [{ name: 'dsd', amount: 5 }],
+  pendingEditIngredientIndex: null,
+};
 
 export const shoppingListReducer = createReducer(
   initialState,
-  on(addIngredient, (state, { ingredient }) => [...state, { ...ingredient }]),
-  on(addIngredients, (state, { ingredients }) => {
-    return [...state, ...ingredients];
-  }),
+  on(addIngredient, (state, { ingredient }) => ({
+    ...state,
+    ingredients: [...state.ingredients, { ...ingredient }],
+  })),
+  on(addIngredients, (state, { ingredients }) => ({
+    ...state,
+    ingredients: [...state.ingredients, ...ingredients],
+  })),
   on(updateIngredient, (state, { index, ingredient }) => {
-    const ingredients = [...state];
+    const ingredients = [...state.ingredients];
     ingredients[index] = { ...ingredient };
-    return ingredients;
+    return {
+      ...state,
+      ingredients,
+    };
   }),
-  on(deleteIngredient, (state, { index }) =>
-    state.filter((_, i) => index != i),
-  ),
+  on(deleteIngredient, (state, { index }) => ({
+    ...state,
+    ingredients: state.ingredients.filter((_, i) => index != i),
+  })),
+  on(setPendingEditIngredientIndex, (state, { index }) => ({
+    ...state,
+    pendingEditIngredientIndex: index,
+  })),
 );

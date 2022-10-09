@@ -9,8 +9,13 @@ export const selectShoppingList =
 
 export const selectIngredients = createSelector(
   selectShoppingList,
-  (state) => state,
+  (state) => state.ingredients,
 );
 
 export const selectIngredient = (index: number) =>
   createSelector(selectIngredients, (ingredients) => ingredients[index]);
+
+export const selectPendingEditIngredientIndex = createSelector(
+  selectShoppingList,
+  (shoppingList) => shoppingList.pendingEditIngredientIndex,
+);

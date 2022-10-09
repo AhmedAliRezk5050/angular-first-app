@@ -15,7 +15,13 @@ export const updateIngredient = createAction(
   '[ShoppingList Page] UpdateIngredient',
   props<{ index: number; ingredient: Ingredient }>(),
 );
+
 export const deleteIngredient = createAction(
   '[ShoppingList Page] DeleteIngredient',
   props<{ index: number }>(),
+);
+
+export const setPendingEditIngredientIndex = createAction(
+  '[ShoppingList Page] SetPendingEditIngredientIndex',
+  props<{ index: number | null }>(),
 );
