@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
 import User from './user.model';
 import { Router } from '@angular/router';
 
-interface SignUpResponse {
+export interface SignUpResponse {
   idToken: string;
   email: string;
   refreshToken: string;
@@ -19,7 +19,7 @@ enum ResponseErrorMessage {
   EmailExists = 'EMAIL_EXISTS',
 }
 
-interface LoginResponse extends SignUpResponse {
+export interface LoginResponse extends SignUpResponse {
   registered: boolean;
 }
 
@@ -50,7 +50,6 @@ export class AuthService {
         tap(({ email, idToken, localId, expiresIn }) =>
           this.storeUserData(email, localId, expiresIn, idToken),
         ),
-        catchError(this.handleError),
       );
   }
 

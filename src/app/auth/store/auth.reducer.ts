@@ -1,7 +1,7 @@
 import { createReducer } from '@ngrx/store';
 import { immerOn } from 'ngrx-immer/store';
 import User from '../user.model';
-import { loginStart, authSuccess, authFail } from './auth.actions';
+import { loginStart, authSuccess, authFail, signUpStart } from './auth.actions';
 
 export const authFeatureKey = 'auth';
 
@@ -20,6 +20,11 @@ export const authInitialState: AuthFeatureState = {
 export const authReducer = createReducer(
   authInitialState,
   immerOn(loginStart, (state) => {
+    state.user = null;
+    state.loading = true;
+    state.error = null;
+  }),
+  immerOn(signUpStart, (state) => {
     state.user = null;
     state.loading = true;
     state.error = null;

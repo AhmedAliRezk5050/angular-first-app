@@ -32,6 +32,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.authFeatureSubscription = this.store
       .select(authFeatureKey)
       .subscribe(({ loading, error }) => {
+        debugger;
         this.loading = loading;
         this.error = error;
         if (error) {
@@ -50,6 +51,10 @@ export class AuthComponent implements OnInit, OnDestroy {
     if (this.logInMode) {
       this.store.dispatch(
         AuthActions.loginStart({ credentials: { email, password } }),
+      );
+    } else {
+      this.store.dispatch(
+        AuthActions.signUpStart({ credentials: { email, password } }),
       );
     }
   }

@@ -6,6 +6,11 @@ export const loginStart = createAction(
   props<{ credentials: UserCredentials }>(),
 );
 
+export const signUpStart = createAction(
+  '[Auth] SignUpStart',
+  props<{ credentials: UserCredentials }>(),
+);
+
 export const authSuccess = createAction(
   '[Auth] AuthSuccess',
   props<{ user: User }>(),
