@@ -17,13 +17,13 @@ export type ShoppingListFeatureState = {
   pendingEditIngredientIndex: number | null;
 };
 
-export const initialState: ShoppingListFeatureState = {
+export const shoppingListInitialState: ShoppingListFeatureState = {
   ingredients: [{ name: 'dsd', amount: 5 }],
   pendingEditIngredientIndex: null,
 };
 
 export const shoppingListReducer = createReducer(
-  initialState,
+  shoppingListInitialState,
   immerOn(addIngredient, (state, { ingredient }) => {
     state.ingredients.push(ingredient);
   }),

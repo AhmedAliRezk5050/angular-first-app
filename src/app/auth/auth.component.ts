@@ -1,12 +1,11 @@
+import { Store } from '@ngrx/store';
+import { authFeatureKey, AuthFeatureState } from './store/auth.reducer';
 import { Subscription } from 'rxjs';
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AuthService } from './auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
 import { AlertComponent } from '../shared/alert/alert.component';
 import { AlertHostDirective } from '../shared/directives/alert-host.directive';
+import * as AuthActions from './store/auth.actions';
 
 @Component({
   selector: 'app-auth',
@@ -16,7 +15,7 @@ import { AlertHostDirective } from '../shared/directives/alert-host.directive';
 export class AuthComponent implements OnInit, OnDestroy {
   logInMode = true;
 
-  isLoading = false;
+  loading = false;
 
   error: string | null = null;
 
@@ -25,9 +24,21 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   alertSubscription?: Subscription;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  authFeatureSubscription?: Subscription;
 
-  ngOnInit(): void {}
+  constructor(private store: Store<{ [authFeatureKey]: AuthFeatureState }>) {}
+
+  ngOnInit(): void {
+    this.authFeatureSubscription = this.store
+      .select(authFeatureKey)
+      .subscribe(({ loading, error }) => {
+        this.loading = loading;
+        this.error = error;
+        if (error) {
+          this.showErrorAlert(error);
+        }
+      });
+  }
 
   onSwitchAuthModes() {
     this.logInMode = !this.logInMode;
@@ -35,24 +46,12 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   onSubmit(authForm: NgForm) {
     const { email, password } = authForm.value;
-    this.isLoading = true;
 
-    const authObs = this.logInMode
-      ? this.authService.signIn(email, password)
-      : this.authService.signUp(email, password);
-
-    authObs.subscribe({
-      next: () => {
-        authForm.reset();
-        this.error = null;
-        this.router.navigate(['/recipes']);
-      },
-      error: (err) => {
-        this.error = err.message;
-        this.isLoading = false;
-        this.showErrorAlert(err.message);
-      },
-    });
+    if (this.logInMode) {
+      this.store.dispatch(
+        AuthActions.loginStart({ credentials: { email, password } }),
+      );
+    }
   }
 
   private showErrorAlert(errorMessage: string) {
@@ -69,5 +68,6 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.alertSubscription?.unsubscribe();
+    this.authFeatureSubscription?.unsubscribe();
   }
 }

@@ -1,10 +1,10 @@
 <div class="row">
   <div class="col-12 col-md-6 offset-md-3">
     <ng-template appAlertHost></ng-template>
-    <div class="d-flex justify-content-center" *ngIf="isLoading">
+    <div class="d-flex justify-content-center" *ngIf="loading">
       <app-loading-spinner></app-loading-spinner>
     </div>
-    <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
+    <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!loading">
       <div class="mb-3">
         <label for="email" class="form-label">E-mail</label>
         <input
