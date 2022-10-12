@@ -32,7 +32,6 @@ export class AuthComponent implements OnInit, OnDestroy {
     this.authFeatureSubscription = this.store
       .select(authFeatureKey)
       .subscribe(({ loading, error }) => {
-        debugger;
         this.loading = loading;
         this.error = error;
         if (error) {
