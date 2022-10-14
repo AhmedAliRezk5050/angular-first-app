@@ -1,9 +1,11 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Ingredient } from '../shared/ingredient.model';
-import { Recipe } from './recipe.model';
-import { v4 as uuidv4 } from 'uuid';
-import { Subject } from 'rxjs';
+import {EventEmitter, Injectable} from '@angular/core';
+import {Ingredient} from '../shared/ingredient.model';
+import {Recipe} from './recipe.model';
+import {v4 as uuidv4} from 'uuid';
+import {Subject} from 'rxjs';
 import DataStorageService from '../shared/services/data-storage.service';
+import {map, tap} from "rxjs/operators";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +15,27 @@ export class RecipeService {
 
   private _recipes: Recipe[] = [];
 
+  private url = 'https://angular-practise-caf1f-default-rtdb.firebaseio.com/recipes.json'
+
+  fetchRecipes() {
+    return this.http.get<Recipe[]>(this.url,
+      {
+        params: {
+          'print': 'pretty'
+        }
+      }).pipe(
+      map(
+        data => {
+          return data.map(recipe => {
+            if (recipe.ingredients) return recipe;
+            recipe.ingredients = [];
+            return recipe;
+          })
+        })
+    )
+  }
+
+
   get recipes() {
     return this._recipes.slice();
   }
@@ -20,8 +43,6 @@ export class RecipeService {
   getRecipe(id: string) {
     return this.recipes.find((r) => r.id === id);
   }
-
-  constructor() {}
 
   setRecipes(recipes: Recipe[]) {
     this._recipes = recipes;
@@ -45,5 +66,8 @@ export class RecipeService {
   deleteRecipe(id: string) {
     this._recipes = this._recipes.filter((r) => r.id !== id);
     this.recipesUpdated.next(this.recipes);
+  }
+
+  constructor(private http: HttpClient) {
   }
 }
