@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
-import { BehaviorSubject, Observable, of, Subject, throwError } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import { Observable, of} from 'rxjs';
 import User from './user.model';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
+import {Store} from "@ngrx/store";
+import {authFeatureKey, AuthFeatureState} from "./store/auth.reducer";
+import * as AuthActions from "./store/auth.actions";
 
 export interface SignUpResponse {
   idToken: string;
@@ -27,76 +29,54 @@ export interface LoginResponse extends SignUpResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  // BehaviorSubject holds the prev value in addition to upcoming values,
-  // so we use it to get user value on demand
-  userSubject = new BehaviorSubject<User | null>(null);
-
   logoutTimer: any;
 
   private key = 'AIzaSyBqIwnjLvSM3QKHrXWtakQlyWFFrwsaXCk';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private store: Store<{ [authFeatureKey]: AuthFeatureState }>) {
+  }
 
   signUp(email: string, password: string) {
-    return this.http
-      .post<SignUpResponse>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp',
-        { email, password, returnSecureToken: true },
-        {
-          params: { key: this.key },
-        },
-      )
-      .pipe(
-        tap(({ email, idToken, localId, expiresIn }) =>
-          this.storeUserData(email, localId, expiresIn, idToken),
-        ),
-      );
+    return this.http.post<SignUpResponse>(
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp',
+      {email, password, returnSecureToken: true},
+      {
+        params: {key: this.key},
+      },
+    );
   }
 
   signIn(email: string, password: string) {
-    return this.http
-      .post<LoginResponse>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword',
-        { email, password, returnSecureToken: true },
-        {
-          params: { key: this.key },
-        },
-      )
-      .pipe(
-        tap(({ email, idToken, localId, expiresIn }) =>
-          this.storeUserData(email, localId, expiresIn, idToken),
-        ),
-      );
+    return this.http.post<LoginResponse>(
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword',
+      {email, password, returnSecureToken: true},
+      {
+        params: {key: this.key},
+      },
+    );
   }
 
-  logout() {
-    this.userSubject.next(null);
-    localStorage.removeItem('userData');
-    this.resetAutoLogout();
-    this.router.navigate(['/auth']);
-  }
-
-  autoLogin() {
+  getUserFromLocalStorage() : Observable<User | null> {
     const userData = localStorage.getItem('userData');
 
-    if (!userData) return;
+    if (!userData) return of(null);
 
-    const { id, email, _token, _tokenExpirationDate } = JSON.parse(
+    const {id, email, _token, _tokenExpirationDate} = JSON.parse(
       userData,
     ) as { [key: string]: string };
 
     const user = new User(email, id, _token, new Date(_tokenExpirationDate));
 
-    if (!user.token) return;
+    if (!user.token) return of(null);
 
-    this.userSubject.next(user);
+    return of(user)
 
-    this.autoLogout(user.tokenExpiryDuration);
   }
 
   autoLogout(expiryDuration: number) {
+    console.log(expiryDuration)
     this.logoutTimer = setTimeout(() => {
-      this.logout();
+      this.store.dispatch(AuthActions.logout())
     }, expiryDuration);
   }
 
@@ -127,7 +107,7 @@ export class AuthService {
     return of(errorMessage);
   };
 
-  private storeUserData = (
+  storeUserData = (
     email: string,
     id: string,
     expiresIn: string,
@@ -139,8 +119,6 @@ export class AuthService {
       token,
       new Date(Date.now() + +expiresIn * 1000),
     );
-    this.userSubject.next(user);
-    this.autoLogout(user.tokenExpiryDuration);
     localStorage.setItem('userData', JSON.stringify(user));
   };
 }

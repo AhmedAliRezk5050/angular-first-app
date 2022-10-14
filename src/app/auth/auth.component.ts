@@ -66,6 +66,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     componentRef.instance.message = errorMessage;
     this.alertSubscription = componentRef.instance.close.subscribe(() => {
       viewContainerRef.clear();
+      this.store.dispatch(AuthActions.clearError());
       this.alertSubscription?.unsubscribe();
     });
   }

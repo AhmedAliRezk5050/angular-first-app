@@ -20,3 +20,11 @@ export const authFail = createAction(
   '[Auth] AuthFail',
   props<{ error: string }>(),
 );
+
+export const logout = createAction('[Auth] Logout');
+
+export const clearError = createAction('[Auth] ClearError');
+
+export const autoLogin = createAction(
+  '[Auth] AutoLogin'
+);

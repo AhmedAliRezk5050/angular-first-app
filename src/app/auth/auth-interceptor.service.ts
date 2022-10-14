@@ -1,26 +1,37 @@
-import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
-import {exhaustMap, take} from "rxjs/operators";
-import {AuthService} from "./auth.service";
-import {Observable} from "rxjs";
-import User from "./user.model";
+import { pipe } from 'rxjs';
+import { Injectable } from '@angular/core';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
+import { exhaustMap, map, switchMap, take } from 'rxjs/operators';
+import { AuthService } from './auth.service';
+import { Observable, firstValueFrom } from 'rxjs';
+import User from './user.model';
+import { Store } from '@ngrx/store';
+import { authFeatureKey, AuthFeatureState } from './store/auth.reducer';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
+  constructor(private store: Store<{ [authFeatureKey]: AuthFeatureState }>) {}
 
-  constructor(private authService: AuthService) {
-  }
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler,
+  ): Observable<HttpEvent<any>> {
+    return this.store.select(authFeatureKey).pipe(
+      take(1),
+      switchMap(({ user }) => {
+        if (!user) return next.handle(req);
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const user = this.authService.userSubject.value;
+        const modifiedRequest = req.clone({
+          params: req.params.set('auth', user.token ?? ''),
+        });
 
-    if (!user) return next.handle(req);
-
-    const modifiedRequest = req.clone({
-      params: req.params.set('auth', user.token ?? '')
-    });
-
-    return next.handle(modifiedRequest);
+        return next.handle(modifiedRequest);
+      }),
+    );
   }
 }
-

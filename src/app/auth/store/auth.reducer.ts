@@ -1,7 +1,14 @@
 import { createReducer } from '@ngrx/store';
 import { immerOn } from 'ngrx-immer/store';
 import User from '../user.model';
-import { loginStart, authSuccess, authFail, signUpStart } from './auth.actions';
+import {
+  loginStart,
+  authSuccess,
+  authFail,
+  signUpStart,
+  clearError,
+  logout,
+} from './auth.actions';
 
 export const authFeatureKey = 'auth';
 
@@ -38,5 +45,15 @@ export const authReducer = createReducer(
     state.user = null;
     state.loading = false;
     state.error = error;
+  }),
+  immerOn(clearError, (state) => {
+    state.user = null;
+    state.loading = false;
+    state.error = null;
+  }),
+  immerOn(logout, (state) => {
+    state.user = null;
+    state.loading = false;
+    state.error = null;
   }),
 );

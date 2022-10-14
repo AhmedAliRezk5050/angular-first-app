@@ -1,10 +1,9 @@
-import {Component, OnInit, Output, EventEmitter, OnDestroy} from '@angular/core';
-import DataStorageService from "../shared/services/data-storage.service";
-import {RecipeService} from "../recipes/recipe.service";
-import {AuthService} from "../auth/auth.service";
-import {Subscription} from "rxjs";
-import User from "../auth/user.model";
-import {Router} from "@angular/router";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import DataStorageService from '../shared/services/data-storage.service';
+import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { authFeatureKey, AuthFeatureState } from '../auth/store/auth.reducer';
+import * as AuthActions from '../auth/store/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -13,18 +12,19 @@ import {Router} from "@angular/router";
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
-  userSubjectSubscription?: Subscription
+  authFeatureSubscription?: Subscription;
 
-
-  constructor(private dataStorageService: DataStorageService,
-              private authService: AuthService) {
-  }
+  constructor(
+    private dataStorageService: DataStorageService,
+    private store: Store<{ [authFeatureKey]: AuthFeatureState }>,
+  ) {}
 
   ngOnInit(): void {
-    this.userSubjectSubscription = this.authService.userSubject
-      .subscribe(user => {
+    this.authFeatureSubscription = this.store
+      .select(authFeatureKey)
+      .subscribe(({ user }) => {
         this.isAuthenticated = !!user;
-      })
+      });
   }
 
   saveRecipes() {
@@ -35,11 +35,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.dataStorageService.fetchRecipes().subscribe();
   }
 
-  ngOnDestroy(): void {
-    this.userSubjectSubscription?.unsubscribe();
+  logout() {
+    this.store.dispatch(AuthActions.logout());
   }
 
-  logout() {
-    this.authService.logout();
+  ngOnDestroy(): void {
+    this.authFeatureSubscription?.unsubscribe();
   }
 }
