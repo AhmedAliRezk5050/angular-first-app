@@ -8,3 +8,8 @@ export const selectRecipes = createSelector(
   selectRecipesFeature,
   (state) => state.recipes,
 );
+
+export const selectRecipe = (id: string) =>
+  createSelector(selectRecipes, (recipes) =>
+    recipes?.find((recipe) => recipe.id == id),
+  );

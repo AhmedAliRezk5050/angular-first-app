@@ -1,3 +1,8 @@
+import { tap } from 'rxjs/operators';
+import {
+  recipesFeatureKey,
+  RecipesFeatureState,
+} from './../store/recipes.reducer';
 import { addIngredients } from './../../shopping-list/store/shopping-list.actions';
 import { Store } from '@ngrx/store';
 import { Recipe } from './../recipe.model';
@@ -8,6 +13,7 @@ import {
   shoppingListFeatureKey,
   ShoppingListFeatureState,
 } from 'src/app/shopping-list/store/shopping-list.reducer';
+import { selectRecipe } from '../store/recipes.selectors';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -23,13 +29,25 @@ export class RecipeDetailComponent implements OnInit {
     private router: Router,
     private store: Store<{
       [shoppingListFeatureKey]: ShoppingListFeatureState;
+      [recipesFeatureKey]: RecipesFeatureState;
     }>,
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(
-      ({ id }) => (this.recipe = this.recipeService.getRecipe(id)),
-    );
+    this.route.params
+      .pipe(
+        tap(({ id }) => {
+          this.store
+            .select(selectRecipe(id))
+            .pipe(
+              tap((rcp) => {
+                this.recipe = rcp;
+              }),
+            )
+            .subscribe();
+        }),
+      )
+      .subscribe();
   }
 
   updateShoppingList() {
