@@ -2,10 +2,10 @@ import { tap } from 'rxjs/operators';
 import {
   recipesFeatureKey,
   RecipesFeatureState,
-} from './../store/recipes.reducer';
-import { addIngredients } from './../../shopping-list/store/shopping-list.actions';
+} from '../store/recipes.reducer';
+import { addIngredients } from '../../shopping-list/store/shopping-list.actions';
 import { Store } from '@ngrx/store';
-import { Recipe } from './../recipe.model';
+import { Recipe } from '../recipe.model';
 import { Component, Input, OnInit } from '@angular/core';
 import { RecipeService } from '../recipe.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +13,7 @@ import {
   shoppingListFeatureKey,
   ShoppingListFeatureState,
 } from 'src/app/shopping-list/store/shopping-list.reducer';
-import { selectRecipe } from '../store/recipes.selectors';
+import * as RecipesActions from '../store/recipes.actions';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -37,11 +37,10 @@ export class RecipeDetailComponent implements OnInit {
     this.route.params
       .pipe(
         tap(({ id }) => {
-          this.store
-            .select(selectRecipe(id))
+          this.route.data
             .pipe(
               tap((rcp) => {
-                this.recipe = rcp;
+                this.recipe = rcp['recipes'].find((r: Recipe) => r.id === id);
               }),
             )
             .subscribe();
@@ -61,7 +60,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onDeleteRecipe() {
-    this.recipeService.deleteRecipe(this.recipe!.id);
+    this.store.dispatch(RecipesActions.deleteRecipe({ id: this.recipe?.id! }));
     this.router.navigate(['recipes']);
   }
 }

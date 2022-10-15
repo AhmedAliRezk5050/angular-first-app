@@ -1,53 +1,92 @@
-<form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" *ngIf="recipe || !id">
   <div class="row">
     <div class="col-12">
       <div class="mb-3">
         <label for="name">Name</label>
-        <input type="text" class="form-control" id="name" formControlName="name">
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          formControlName="name"
+        />
       </div>
 
       <div class="mb-3">
         <label for="img-url">Image Url</label>
-        <input type="text" class="form-control" id="img-url" formControlName="imagePath" #imgPath>
+        <input
+          type="text"
+          class="form-control"
+          id="img-url"
+          formControlName="imagePath"
+          #imgPath
+        />
       </div>
 
       <div class="row mb-3">
         <div class="col-3">
-          <img [src]="imgPath.value" alt="" class="img-fluid">
+          <img [src]="imgPath.value" alt="" class="img-fluid" />
         </div>
       </div>
 
       <div class="mb-3">
         <label for="description">Description</label>
-        <textarea type="text" class="form-control" id="description" rows="6" formControlName="description"></textarea>
+        <textarea
+          type="text"
+          class="form-control"
+          id="description"
+          rows="6"
+          formControlName="description"
+        ></textarea>
       </div>
 
       <div class="mb-5" formArrayName="ingredients">
-        <div class="row mb-2"
-             *ngFor="let ing of ingredientsFormArray.controls;
-              let i = index;" [formGroupName]="i">
+        <div
+          class="row mb-2"
+          *ngFor="let ing of ingredientsFormArray.controls; let i = index"
+          [formGroupName]="i"
+        >
           <div class="col-6">
-            <input type="text" class="form-control" formControlName="name">
+            <input type="text" class="form-control" formControlName="name" />
           </div>
           <div class="col-2">
-            <input type="number" class="form-control" formControlName="amount">
+            <input
+              type="number"
+              class="form-control"
+              formControlName="amount"
+            />
           </div>
           <div class="col-2">
-            <button class="btn btn-danger" type="button" (click)="onDeleteIngredient(i)"><i class="bi bi-x"></i></button>
+            <button
+              class="btn btn-danger"
+              type="button"
+              (click)="onDeleteIngredient(i)"
+            >
+              <i class="bi bi-x"></i>
+            </button>
           </div>
         </div>
         <div class="mt-3">
-          <button class="btn btn-success" type="button" (click)="onAddIngredient()">
+          <button
+            class="btn btn-success"
+            type="button"
+            (click)="onAddIngredient()"
+          >
             <i class="bi bi-plus-lg"></i> Add Ingredient
           </button>
         </div>
       </div>
-
     </div>
-    <div class="col-12  btn-group">
-      <button class="btn btn-success" type="submit" [disabled]="recipeForm.invalid">Save</button>
-      <button class="btn btn-danger" type="button" (click)="onCancel()">Cancel</button>
+    <div class="col-12 btn-group">
+      <button
+        class="btn btn-success"
+        type="submit"
+        [disabled]="recipeForm.invalid"
+      >
+        Save
+      </button>
+      <button class="btn btn-danger" type="button" (click)="onCancel()">
+        Cancel
+      </button>
     </div>
   </div>
 </form>
-

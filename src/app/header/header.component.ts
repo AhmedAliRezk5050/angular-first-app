@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { authFeatureKey, AuthFeatureState } from '../auth/store/auth.reducer';
 import * as AuthActions from '../auth/store/auth.actions';
+import {recipesFeatureKey, RecipesFeatureState} from "../recipes/store/recipes.reducer";
+import {fetchRecipesStart} from "../recipes/store/recipes.actions";
 
 @Component({
   selector: 'app-header',
@@ -16,7 +18,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private dataStorageService: DataStorageService,
-    private store: Store<{ [authFeatureKey]: AuthFeatureState }>,
+    private store: Store<{ [authFeatureKey]: AuthFeatureState, [recipesFeatureKey]: RecipesFeatureState }>,
   ) {}
 
   ngOnInit(): void {
@@ -32,7 +34,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   fetchRecipes() {
-    this.dataStorageService.fetchRecipes().subscribe();
+    this.store.dispatch(fetchRecipesStart())
   }
 
   logout() {

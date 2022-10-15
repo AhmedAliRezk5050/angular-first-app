@@ -32,7 +32,7 @@ export default class AuthEffects {
           map(({email, expiresIn, idToken, localId}) => {
             this.authService.storeUserData(email, localId, expiresIn, idToken);
 
-
+            this.router.navigate(['/']);
             return AuthActions.authSuccess({
               user: new User(
                 email,
@@ -58,7 +58,8 @@ export default class AuthEffects {
         ofType(AuthActions.authSuccess),
         tap(({user}) => {
           this.authService.autoLogout(user.tokenExpiryDuration)
-          this.router.navigate(['/']);
+
+          // this.router.navigate(['/']);
         }),
       ),
     {dispatch: false},

@@ -56,6 +56,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         AuthActions.signUpStart({ credentials: { email, password } }),
       );
     }
+
   }
 
   private showErrorAlert(errorMessage: string) {
