@@ -1,10 +1,10 @@
-import {take, tap} from 'rxjs/operators';
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
-import {Actions, ofType, createEffect} from '@ngrx/effects';
-import {of, Observable, EMPTY} from 'rxjs';
-import {catchError, exhaustMap, map} from 'rxjs/operators';
-import {AuthService, LoginResponse, SignUpResponse} from '../auth.service';
+import { take, tap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Actions, ofType, createEffect } from '@ngrx/effects';
+import { of, Observable, EMPTY } from 'rxjs';
+import { catchError, exhaustMap, map } from 'rxjs/operators';
+import { AuthService, LoginResponse, SignUpResponse } from '../auth.service';
 import User from '../user.model';
 import * as AuthActions from './auth.actions';
 
@@ -29,10 +29,11 @@ export default class AuthEffects {
         }
 
         return authFn.pipe(
-          map(({email, expiresIn, idToken, localId}) => {
+          map(({ email, expiresIn, idToken, localId }) => {
             this.authService.storeUserData(email, localId, expiresIn, idToken);
 
             this.router.navigate(['/']);
+
             return AuthActions.authSuccess({
               user: new User(
                 email,
@@ -45,7 +46,7 @@ export default class AuthEffects {
           catchError((error) =>
             this.authService
               .handleError(error)
-              .pipe(map((message) => AuthActions.authFail({error: message}))),
+              .pipe(map((message) => AuthActions.authFail({ error: message }))),
           ),
         );
       }),
@@ -56,13 +57,11 @@ export default class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.authSuccess),
-        tap(({user}) => {
-          this.authService.autoLogout(user.tokenExpiryDuration)
-
-          // this.router.navigate(['/']);
+        tap(({ user }) => {
+          this.authService.autoLogout(user.tokenExpiryDuration);
         }),
       ),
-    {dispatch: false},
+    { dispatch: false },
   );
 
   logout$ = createEffect(
@@ -72,34 +71,35 @@ export default class AuthEffects {
         tap(() => {
           this.router.navigate(['/auth']);
           localStorage.removeItem('userData');
-          this.authService.resetAutoLogout()
+          this.authService.resetAutoLogout();
         }),
       ),
-    {dispatch: false},
+    { dispatch: false },
   );
 
-  autoLogin$ = createEffect(
-    () => this.actions$.pipe(
+  autoLogin$ = createEffect(() =>
+    this.actions$.pipe(
       ofType(AuthActions.autoLogin),
       exhaustMap((action) => {
         let user: User | null = null;
 
-        this.authService.getUserFromLocalStorage()
-          .pipe(take(1)).subscribe(u => user = u);
+        this.authService
+          .getUserFromLocalStorage()
+          .pipe(take(1))
+          .subscribe((u) => (user = u));
 
         if (user) {
-          return of(AuthActions.authSuccess({user: user}))
+          return of(AuthActions.authSuccess({ user: user }));
         } else {
-          return EMPTY
+          return EMPTY;
         }
-      })
-    )
+      }),
+    ),
   );
 
   constructor(
     private actions$: Actions,
     private authService: AuthService,
     private router: Router,
-  ) {
-  }
+  ) {}
 }

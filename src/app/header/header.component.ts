@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import DataStorageService from '../shared/services/data-storage.service';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { authFeatureKey, AuthFeatureState } from '../auth/store/auth.reducer';
 import * as AuthActions from '../auth/store/auth.actions';
-import {recipesFeatureKey, RecipesFeatureState} from "../recipes/store/recipes.reducer";
-import {fetchRecipesStart} from "../recipes/store/recipes.actions";
+import {
+  recipesFeatureKey,
+  RecipesFeatureState,
+} from '../recipes/store/recipes.reducer';
+import { fetchRecipesStart } from '../recipes/store/recipes.actions';
 
 @Component({
   selector: 'app-header',
@@ -17,8 +19,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   authFeatureSubscription?: Subscription;
 
   constructor(
-    private dataStorageService: DataStorageService,
-    private store: Store<{ [authFeatureKey]: AuthFeatureState, [recipesFeatureKey]: RecipesFeatureState }>,
+    private store: Store<{
+      [authFeatureKey]: AuthFeatureState;
+      [recipesFeatureKey]: RecipesFeatureState;
+    }>,
   ) {}
 
   ngOnInit(): void {
@@ -29,12 +33,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
   }
 
-  saveRecipes() {
-    this.dataStorageService.storeRecipes();
-  }
+  saveRecipes() {}
 
   fetchRecipes() {
-    this.store.dispatch(fetchRecipesStart())
+    this.store.dispatch(fetchRecipesStart());
   }
 
   logout() {

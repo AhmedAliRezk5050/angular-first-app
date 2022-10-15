@@ -7,9 +7,7 @@ import {
   RouterStateSnapshot,
 } from '@angular/router';
 import { Recipe } from './recipe.model';
-import { EMPTY, Observable } from 'rxjs';
-import DataStorageService from '../shared/services/data-storage.service';
-import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import {
   recipesFeatureKey,

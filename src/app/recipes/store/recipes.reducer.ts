@@ -13,13 +13,13 @@ import {
 export const recipesFeatureKey = 'recipes';
 
 export interface RecipesFeatureState {
-  recipes: Recipe[] | null;
+  recipes: Recipe[];
   loading: boolean;
   error: string | null;
 }
 
 const recipesInitialState: RecipesFeatureState = {
-  recipes: null,
+  recipes: [],
   loading: false,
   error: null,
 };
@@ -27,7 +27,7 @@ const recipesInitialState: RecipesFeatureState = {
 export const recipesReducer = createReducer(
   recipesInitialState,
   immerOn(fetchRecipesStart, (state) => {
-    state.recipes = null;
+    state.recipes = [];
     state.loading = true;
     state.error = null;
   }),
@@ -37,23 +37,17 @@ export const recipesReducer = createReducer(
     state.error = null;
   }),
   immerOn(fetchRecipesFail, (state, { error }) => {
-    state.recipes = null;
+    state.recipes = [];
     state.loading = false;
     state.error = error;
   }),
   immerOn(deleteRecipe, (state, { id }) => {
-    const recipes = state.recipes;
-    if (recipes) {
-      state.recipes = recipes.filter((r) => r.id !== id);
-    }
+    state.recipes = state.recipes.filter((r) => r.id !== id);
   }),
   immerOn(editRecipe, (state, { recipe }) => {
-    const recipes = state.recipes;
-    if (recipes) {
-      state.recipes = recipes.map((r) => (r.id === recipe.id ? recipe : r));
-    }
+    state.recipes = state.recipes.map((r) => (r.id === recipe.id ? recipe : r));
   }),
   immerOn(createRecipe, (state, { recipe }) => {
-    state.recipes?.push(recipe);
+    state.recipes.push(recipe);
   }),
 );
