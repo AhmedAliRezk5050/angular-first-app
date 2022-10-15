@@ -13,13 +13,13 @@ import {
 export const recipesFeatureKey = 'recipes';
 
 export interface RecipesFeatureState {
-  recipes: Recipe[];
+  recipes: Recipe[] | null;
   loading: boolean;
   error: string | null;
 }
 
 const recipesInitialState: RecipesFeatureState = {
-  recipes: [],
+  recipes: null,
   loading: false,
   error: null,
 };
@@ -42,12 +42,21 @@ export const recipesReducer = createReducer(
     state.error = error;
   }),
   immerOn(deleteRecipe, (state, { id }) => {
-    state.recipes = state.recipes.filter((r) => r.id !== id);
+    if (state.recipes) {
+      state.recipes = state.recipes.filter((r) => r.id !== id);
+    }
   }),
   immerOn(editRecipe, (state, { recipe }) => {
-    state.recipes = state.recipes.map((r) => (r.id === recipe.id ? recipe : r));
+    if (state.recipes) {
+      state.recipes = state.recipes.map((r) =>
+        r.id === recipe.id ? recipe : r,
+      );
+    }
   }),
   immerOn(createRecipe, (state, { recipe }) => {
+    if (!state.recipes) {
+      state.recipes = [];
+    }
     state.recipes.push(recipe);
   }),
 );

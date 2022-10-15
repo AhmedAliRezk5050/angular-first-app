@@ -29,7 +29,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.store.select(selectRecipes).subscribe((recipes) => {
-      this.recipes = recipes;
+      this.recipes = recipes ?? [];
     });
   }
 

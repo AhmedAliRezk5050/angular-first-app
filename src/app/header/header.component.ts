@@ -1,5 +1,7 @@
+import { Recipe } from './../recipes/recipe.model';
+import { selectRecipes } from './../recipes/store/recipes.selectors';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { authFeatureKey, AuthFeatureState } from '../auth/store/auth.reducer';
 import * as AuthActions from '../auth/store/auth.actions';
@@ -7,7 +9,7 @@ import {
   recipesFeatureKey,
   RecipesFeatureState,
 } from '../recipes/store/recipes.reducer';
-import { fetchRecipesStart } from '../recipes/store/recipes.actions';
+import * as RecipesActions from '../recipes/store/recipes.actions';
 
 @Component({
   selector: 'app-header',
@@ -17,6 +19,8 @@ import { fetchRecipesStart } from '../recipes/store/recipes.actions';
 export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   authFeatureSubscription?: Subscription;
+  recipesFeatureSubscription?: Subscription;
+  recipes: Recipe[] | null = null;
 
   constructor(
     private store: Store<{
@@ -31,12 +35,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe(({ user }) => {
         this.isAuthenticated = !!user;
       });
+
+    this.recipesFeatureSubscription = this.store
+      .select(selectRecipes)
+      .subscribe((recipes) => {
+        this.recipes = recipes;
+      });
   }
 
-  saveRecipes() {}
+  saveRecipes = async () => {
+    if (!this.recipes) return;
+
+    this.store.dispatch(
+      RecipesActions.saveRecipesStart({
+        recipes: this.recipes,
+      }),
+    );
+  };
 
   fetchRecipes() {
-    this.store.dispatch(fetchRecipesStart());
+    this.store.dispatch(RecipesActions.fetchRecipesStart());
   }
 
   logout() {
@@ -45,5 +63,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.authFeatureSubscription?.unsubscribe();
+    this.recipesFeatureSubscription?.unsubscribe();
   }
 }

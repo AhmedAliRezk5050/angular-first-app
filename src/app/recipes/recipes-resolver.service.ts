@@ -8,6 +8,7 @@ import {
 } from '@angular/router';
 import { Recipe } from './recipe.model';
 import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import {
   recipesFeatureKey,
@@ -37,7 +38,9 @@ export default class RecipesResolverService
       });
 
     return this.store.select(selectRecipes).pipe(
-      filter((recipes) => !!recipes),
+      filter((recipes) => {
+        return !!recipes && recipes.length > 0;
+      }),
       take(1),
     );
   }

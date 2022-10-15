@@ -23,6 +23,19 @@ export default class RecipesEffects {
       ), // pipe
   ); // createEffect
 
+  saveRecipesStart$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(RecipesActions.saveRecipesStart),
+      exhaustMap((action) => {
+        return this.recipesService.storeRecipes().pipe(
+          map(() => {
+            return RecipesActions.saveRecipesSuccess();
+          }),
+        );
+      }),
+    ),
+  );
+
   constructor(
     private actions$: Actions,
     private recipesService: RecipeService,
