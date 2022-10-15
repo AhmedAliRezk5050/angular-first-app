@@ -1,5 +1,5 @@
-import {createAction, props} from '@ngrx/store';
-import {Recipe} from '../recipe.model';
+import { createAction, props } from '@ngrx/store';
+import { Recipe } from '../recipe.model';
 
 export const fetchRecipesStart = createAction('[Recipes] FetchRecipesStart');
 
@@ -15,5 +15,10 @@ export const fetchRecipesFail = createAction(
 
 export const deleteRecipe = createAction(
   '[Recipes] DeleteRecipe',
-  props<{id: string}>()
+  props<{ id: string }>(),
+);
+
+export const editRecipe = createAction(
+  '[Recipes] EditRecipe',
+  props<{ recipe: Recipe }>(),
 );

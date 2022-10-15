@@ -1,8 +1,9 @@
-import {createReducer} from '@ngrx/store';
-import {Recipe} from '../recipe.model';
-import {immerOn} from 'ngrx-immer/store';
+import { createReducer } from '@ngrx/store';
+import { Recipe } from '../recipe.model';
+import { immerOn } from 'ngrx-immer/store';
 import {
   deleteRecipe,
+  editRecipe,
   fetchRecipesFail,
   fetchRecipesStart,
   fetchRecipesSuccess,
@@ -29,20 +30,26 @@ export const recipesReducer = createReducer(
     state.loading = true;
     state.error = null;
   }),
-  immerOn(fetchRecipesSuccess, (state, {recipes}) => {
+  immerOn(fetchRecipesSuccess, (state, { recipes }) => {
     state.recipes = recipes;
     state.loading = false;
     state.error = null;
   }),
-  immerOn(fetchRecipesFail, (state, {error}) => {
+  immerOn(fetchRecipesFail, (state, { error }) => {
     state.recipes = null;
     state.loading = false;
     state.error = error;
   }),
-  immerOn(deleteRecipe, (state, {id}) => {
+  immerOn(deleteRecipe, (state, { id }) => {
     const recipes = state.recipes;
     if (recipes) {
-      state.recipes = recipes.filter(r => r.id !== id);
+      state.recipes = recipes.filter((r) => r.id !== id);
+    }
+  }),
+  immerOn(editRecipe, (state, { recipe }) => {
+    const recipes = state.recipes;
+    if (recipes) {
+      state.recipes = recipes.map((r) => (r.id === recipe.id ? recipe : r));
     }
   }),
 );

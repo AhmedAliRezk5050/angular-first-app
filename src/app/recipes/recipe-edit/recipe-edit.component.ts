@@ -11,6 +11,7 @@ import {
   recipesFeatureKey,
   RecipesFeatureState,
 } from '../store/recipes.reducer';
+import * as RecipesActions from '../store/recipes.actions';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -84,7 +85,9 @@ export class RecipeEditComponent implements OnInit {
   onSubmit() {
     const formValue = this.recipeForm.value;
     if (this.editMode) {
-      this.recipeService.editRecipe({ id: this.id, ...formValue });
+      this.store.dispatch(
+        RecipesActions.editRecipe({ recipe: { id: this.id!, ...formValue } }),
+      );
     } else {
       this.recipeService.addRecipe({ ...formValue });
     }
