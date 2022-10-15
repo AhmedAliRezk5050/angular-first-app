@@ -1,11 +1,15 @@
-import {EventEmitter, Injectable} from '@angular/core';
-import {Ingredient} from '../shared/ingredient.model';
-import {Recipe} from './recipe.model';
-import {v4 as uuidv4} from 'uuid';
-import {Subject} from 'rxjs';
-import DataStorageService from '../shared/services/data-storage.service';
-import {map, tap} from "rxjs/operators";
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { Recipe } from './recipe.model';
+import { v4 as uuidv4 } from 'uuid';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Store } from '@ngrx/store';
+import {
+  recipesFeatureKey,
+  RecipesFeatureState,
+} from './store/recipes.reducer';
+import * as RecipesActions from './store/recipes.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -15,26 +19,26 @@ export class RecipeService {
 
   private _recipes: Recipe[] = [];
 
-  private url = 'https://angular-practise-caf1f-default-rtdb.firebaseio.com/recipes.json'
+  private url =
+    'https://angular-practise-caf1f-default-rtdb.firebaseio.com/recipes.json';
 
   fetchRecipes() {
-    return this.http.get<Recipe[]>(this.url,
-      {
+    return this.http
+      .get<Recipe[]>(this.url, {
         params: {
-          'print': 'pretty'
-        }
-      }).pipe(
-      map(
-        data => {
-          return data.map(recipe => {
+          print: 'pretty',
+        },
+      })
+      .pipe(
+        map((data) => {
+          return data.map((recipe) => {
             if (recipe.ingredients) return recipe;
             recipe.ingredients = [];
             return recipe;
-          })
-        })
-    )
+          });
+        }),
+      );
   }
-
 
   get recipes() {
     return this._recipes.slice();
@@ -50,24 +54,15 @@ export class RecipeService {
   }
 
   addRecipe(recipe: Recipe) {
-    this._recipes.push({
-      ...recipe,
-      id: uuidv4(),
-    });
-    this.recipesUpdated.next(this.recipes);
+    this.store.dispatch(
+      RecipesActions.createRecipe({ recipe: { ...recipe, id: uuidv4() } }),
+    );
   }
 
-  editRecipe(recipe: Recipe) {
-    const recipeIndex = this._recipes.findIndex((r) => r.id == recipe.id);
-    this._recipes[recipeIndex] = recipe;
-    this.recipesUpdated.next(this.recipes);
-  }
-
-  deleteRecipe(id: string) {
-    this._recipes = this._recipes.filter((r) => r.id !== id);
-    this.recipesUpdated.next(this.recipes);
-  }
-
-  constructor(private http: HttpClient) {
-  }
+  constructor(
+    private http: HttpClient,
+    private store: Store<{
+      [recipesFeatureKey]: RecipesFeatureState;
+    }>,
+  ) {}
 }

@@ -2,6 +2,7 @@ import { createReducer } from '@ngrx/store';
 import { Recipe } from '../recipe.model';
 import { immerOn } from 'ngrx-immer/store';
 import {
+  createRecipe,
   deleteRecipe,
   editRecipe,
   fetchRecipesFail,
@@ -51,5 +52,8 @@ export const recipesReducer = createReducer(
     if (recipes) {
       state.recipes = recipes.map((r) => (r.id === recipe.id ? recipe : r));
     }
+  }),
+  immerOn(createRecipe, (state, { recipe }) => {
+    state.recipes?.push(recipe);
   }),
 );

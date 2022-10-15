@@ -22,3 +22,8 @@ export const editRecipe = createAction(
   '[Recipes] EditRecipe',
   props<{ recipe: Recipe }>(),
 );
+
+export const createRecipe = createAction(
+  '[Recipes] CreateRecipe',
+  props<{ recipe: Recipe }>(),
+);
