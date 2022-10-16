@@ -38,12 +38,7 @@ export class RecipeService {
       );
   }
 
-  storeRecipes = () => {
-    return this.store.select(selectRecipes).pipe(
-      take(1),
-      switchMap((recipes) => this.http.put(this.url, recipes)),
-    );
-  };
+  storeRecipes = (recipes: Recipe[]) => this.http.put(this.url, recipes);
 
   addRecipe(recipe: Recipe) {
     this.store.dispatch(
