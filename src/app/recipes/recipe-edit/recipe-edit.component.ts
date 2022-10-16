@@ -12,6 +12,7 @@ import {
   RecipesFeatureState,
 } from '../store/recipes.reducer';
 import * as RecipesActions from '../store/recipes.actions';
+import { AppRoutes } from 'src/app/shared/AppRoutes';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -39,6 +40,7 @@ export class RecipeEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(({ id }) => {
+      debugger;
       this.id = id;
       this.editMode = !!id;
       this.modeMessage = this.editMode ? 'edit' : 'new';
@@ -56,6 +58,9 @@ export class RecipeEditComponent implements OnInit {
       this.recipe = await firstValueFrom(
         this.store.select(selectRecipe(this.id!)),
       );
+      if (!this.recipe) {
+        this.router.navigate([`/${AppRoutes.NotFound}`]);
+      }
       name = this.recipe!.name;
       description = this.recipe!.description;
       imagePath = this.recipe!.imagePath;

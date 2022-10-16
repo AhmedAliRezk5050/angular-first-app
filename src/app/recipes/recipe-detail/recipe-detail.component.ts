@@ -1,4 +1,4 @@
-import {map, switchMap, tap} from 'rxjs/operators';
+import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import {
   recipesFeatureKey,
   RecipesFeatureState,
@@ -14,6 +14,8 @@ import {
   ShoppingListFeatureState,
 } from 'src/app/shopping-list/store/shopping-list.reducer';
 import * as RecipesActions from '../store/recipes.actions';
+import { EMPTY } from 'rxjs';
+import { AppRoutes } from 'src/app/shared/AppRoutes';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -37,12 +39,18 @@ export class RecipeDetailComponent implements OnInit {
     this.route.params
       .pipe(
         switchMap(({ id }) => {
-          return this.route.data
-            .pipe(
-              tap((rcp) => {
-                this.recipe = rcp['recipes'].find((r: Recipe) => r.id === id);
-              }),
-            )
+          return this.route.data.pipe(
+            tap((rcp) => {
+              this.recipe = rcp['recipes'].find((r: Recipe) => r.id === id);
+              if (!this.recipe) {
+                throw new Error('Recipe is not found');
+              }
+            }),
+            catchError(() => {
+              this.router.navigate([`/${AppRoutes.NotFound}`]);
+              return EMPTY;
+            }),
+          );
         }),
       )
       .subscribe();
