@@ -1,4 +1,4 @@
-import { tap } from 'rxjs/operators';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {
   recipesFeatureKey,
   RecipesFeatureState,
@@ -36,14 +36,13 @@ export class RecipeDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.params
       .pipe(
-        tap(({ id }) => {
-          this.route.data
+        switchMap(({ id }) => {
+          return this.route.data
             .pipe(
               tap((rcp) => {
                 this.recipe = rcp['recipes'].find((r: Recipe) => r.id === id);
               }),
             )
-            .subscribe();
         }),
       )
       .subscribe();
